@@ -1,0 +1,912 @@
+<?xml version="1.0" ?>
+<sdf version="1.7">
+
+<!--
+https://gazebosim.org/docs/citadel/building_robot
+https://github.com/gazebosim/docs/blob/master/citadel/tutorials/building_robot/building_robot.sdf#L132
+https://gazebosim.org/api/gazebo/3.7/migrationsdf.html
+https://github.com/gazebosim/gazebo-classic/blob/gazebo11/media/materials/scripts/gazebo.material
+Plugin - Systems that are only used to read the current state of the world (sensors, graphics, and rendering) should implement ISystemPostUpdate.
+https://gazebosim.org/api/gazebo/4.2/createsystemplugins.html
+https://gazebosim.org/api/gazebo/4.2/migrationplugins.html
+-->
+    <world name="sar_world">
+        <physics name="1ms" type="ignored">
+            <max_step_size>0.001</max_step_size>
+            <real_time_factor>1.0</real_time_factor>
+        </physics>
+        <plugin
+            filename="ignition-gazebo-physics-system"
+            name="ignition::gazebo::systems::Physics">
+        </plugin>
+        <plugin
+            filename="ignition-gazebo-user-commands-system"
+            name="ignition::gazebo::systems::UserCommands">
+        </plugin>
+        <plugin
+            filename="ignition-gazebo-scene-broadcaster-system"
+            name="ignition::gazebo::systems::SceneBroadcaster">
+        </plugin>
+
+        <gui fullscreen="0">
+
+            <!-- 3D scene -->
+            <plugin filename="GzScene3D" name="3D View">
+                <ignition-gui>
+                <title>3D View</title>
+                <property type="bool" key="showTitleBar">false</property>
+                <property type="string" key="state">docked</property>
+                </ignition-gui>
+
+                <engine>ogre2</engine>
+                <scene>scene</scene>
+                <ambient_light>0.4 0.4 0.4</ambient_light>
+                <background_color>0.8 0.8 0.8</background_color>
+            </plugin>
+
+            <!-- World control -->
+            <plugin filename="WorldControl" name="World control">
+                <ignition-gui>
+                <title>World control</title>
+                <property type="bool" key="showTitleBar">false</property>
+                <property type="bool" key="resizable">false</property>
+                <property type="double" key="height">72</property>
+                <property type="double" key="width">121</property>
+                <property type="double" key="z">1</property>
+
+                <property type="string" key="state">floating</property>
+                <anchors target="3D View">
+                    <line own="left" target="left"/>
+                    <line own="bottom" target="bottom"/>
+                </anchors>
+                </ignition-gui>
+
+                <play_pause>true</play_pause>
+                <step>true</step>
+                <start_paused>true</start_paused>
+                <service>/world/car_world/control</service>
+                <stats_topic>/world/car_world/stats</stats_topic>
+            </plugin>
+
+            <!-- World statistics -->
+            <plugin filename="WorldStats" name="World stats">
+                <ignition-gui>
+                <title>World stats</title>
+                <property type="bool" key="showTitleBar">false</property>
+                <property type="bool" key="resizable">false</property>
+                <property type="double" key="height">110</property>
+                <property type="double" key="width">290</property>
+                <property type="double" key="z">1</property>
+
+                <property type="string" key="state">floating</property>
+                <anchors target="3D View">
+                    <line own="right" target="right"/>
+                    <line own="bottom" target="bottom"/>
+                </anchors>
+                </ignition-gui>
+
+                <sim_time>true</sim_time>
+                <real_time>true</real_time>
+                <real_time_factor>true</real_time_factor>
+                <iterations>true</iterations>
+                <topic>/world/car_world/stats</topic>
+
+            </plugin>
+
+            <!-- Entity tree -->
+            <plugin filename="EntityTree" name="Entity tree">
+            </plugin>
+
+        </gui>
+
+        <light type="directional" name="sun">
+            <cast_shadows>true</cast_shadows>
+            <pose>0 0 10 0 0 0</pose>
+            <diffuse>0.8 0.8 0.8 1</diffuse>
+            <specular>0.2 0.2 0.2 1</specular>
+            <attenuation>
+                <range>1000</range>
+                <constant>0.9</constant>
+                <linear>0.01</linear>
+                <quadratic>0.001</quadratic>
+            </attenuation>
+            <direction>-0.5 0.1 -0.9</direction>
+        </light>
+
+        <model name="ground_plane">
+            <static>true</static>
+            <link name="link">
+                <collision name="collision">
+                <geometry>
+                    <plane>
+                    <normal>0 0 1</normal>
+                    </plane>
+                </geometry>
+                </collision>
+                <visual name="visual">
+                <geometry>
+                    <plane>
+                    <normal>0 0 1</normal>
+                    <size>4 4</size>
+                    </plane>
+                </geometry>
+                <material>
+                    <ambient>0.8 0.8 0.8 1</ambient>
+                    <diffuse>0.8 0.8 0.8 1</diffuse>
+                    <specular>0.8 0.8 0.8 1</specular>
+                </material>
+                </visual>
+            </link>
+        </model>
+
+        <model name='SAR_Base' canonical_link='SAR_Body'>
+            <pose relative_to='world'>0 0 1 0 0 0</pose>   <!--the pose is relative to the world by default-->
+            
+            <!--SAR_Body-->
+            <link name='SAR_Body'>   
+                <pose relative_to='__model__'>0 0 1-2.0e-3 0 0 0</pose> 
+                <inertial> <!--inertial properties of the link mass, inertia matix-->
+                    <mass>0.0343</mass>
+                    <inertia>
+                        <ixx>15.83e-6</ixx>
+                        <ixy>0</ixy>
+                        <ixz>0</ixz>
+                        <iyy>17.00e-6</iyy>
+                        <iyz>0</iyz>
+                        <izz>31.19e-6</izz>
+                    </inertia>
+                    <pose>0 0 0 0 0 0</pose>
+                </inertial>
+                <pose>0 0 0 0 0 0</pose>
+                <gravity>1</gravity>
+                <self_collide>0</self_collide>
+                <kinematic>0</kinematic>
+                <enable_wind>0</enable_wind>
+
+                <visual name='CF_Body'>
+                    <pose>0 0 0 0 0 0</pose>
+                    <geometry>
+                    <mesh>
+                        <uri>models/Crazyflie/SAR_Base/meshes/CF_Assembly - CF_Body-1.STL</uri>
+                        <scale>1 1 1</scale>
+                    </mesh>
+                    </geometry>
+                    <material>
+                        <!--DarkGrey-->
+                        <ambient>0.175 0.175 0.175 1</ambient>
+                        <diffuse>0.175 0.175 0.175 1</diffuse>
+                        <specular>0.175 0.175 0.175 1.00 1.50</specular>
+                    <lighting>1</lighting>
+                    </material>
+                </visual>
+
+                <visual name='CF_Battery'>
+                    <pose>0 0 0 0 0 0</pose>
+                    <geometry>
+                    <mesh>
+                        <uri>models/Crazyflie/SAR_Base/meshes/CF_Assembly - Battery_Small-1.STL</uri>
+                        <scale>1 1 1</scale>
+                    </mesh>
+                    </geometry>
+                    <material>
+                        <!--Grey-->
+                        <ambient>0.3 0.3 0.3 1</ambient>
+                        <diffuse>0.7 0.7 0.7 1</diffuse>
+                        <specular>0.01 0.01 0.01 1.00 1.50</specular>
+                    <lighting>1</lighting>
+                    </material>
+                </visual>
+
+                <visual name='CF_Battery_Holder'>
+                    <pose>0 0 0 0 0 0</pose>
+                    <geometry>
+                    <mesh>
+                        <uri>models/Crazyflie/SAR_Base/meshes/CF_Assembly - Battery_Holder1-1.STL</uri>
+                        <scale>1 1 1</scale>
+                    </mesh>
+                    </geometry>
+                    <material>
+                        <!--DarkGrey-->
+                        <ambient>0.175 0.175 0.175 1</ambient>
+                        <diffuse>0.175 0.175 0.175 1</diffuse>
+                        <specular>0.175 0.175 0.175 1.00 1.50</specular>
+                    <lighting>1</lighting>
+                    </material>
+                </visual>
+
+                <visual name='CF_Pins_1'>
+                    <pose>0 0 0 0 0 0</pose>
+                    <geometry>
+                    <mesh>
+                        <uri>models/Crazyflie/SAR_Base/meshes/CF_Assembly - Pin_Headers-1.STL</uri>
+                        <scale>1 1 1</scale>
+                    </mesh>
+                    </geometry>
+                    <material>
+                        <!--Gold-->
+                        <ambient>0.4 0.24869 0.020759 1</ambient>
+                        <diffuse>0.8 0.648690 0.120759 1</diffuse>
+                        <specular>0.4 0.4 0.4 1.00 12.50</specular>
+                    <lighting>1</lighting>
+                    </material>
+                </visual>
+
+                <visual name='CF_Pins_2'>
+                    <pose>0 0 0 0 0 0</pose>
+                    <geometry>
+                    <mesh>
+                        <uri>models/Crazyflie/SAR_Base/meshes/CF_Assembly - Pin_Headers-2.STL</uri>
+                        <scale>1 1 1</scale>
+                    </mesh>
+                    </geometry>
+                    <material>
+                        <!--Gold-->
+                        <ambient>0.4 0.24869 0.020759 1</ambient>
+                        <diffuse>0.8 0.648690 0.120759 1</diffuse>
+                        <specular>0.4 0.4 0.4 1.00 12.50</specular>
+                    <lighting>1</lighting>
+                    </material>
+                </visual>
+
+                <visual name='CF_Motor_Mount_4'>
+                    <pose>0 0 0 0 0 0</pose>
+                    <geometry>
+                    <mesh>
+                        <uri>models/Crazyflie/SAR_Base/meshes/CF_Assembly - Motor_Mount-1.STL</uri>
+                        <scale>1 1 1</scale>
+                    </mesh>
+                    </geometry>
+                    <material>
+                        <!--White-->                    
+                        <ambient>1 1 1 1</ambient>
+                        <diffuse>1 1 1 1</diffuse>
+                        <specular>0.1 0.1 0.1 128</specular>
+                    <lighting>1</lighting>
+                    </material>
+                </visual>
+
+
+                <visual name='CF_Motor_Mount_3'>
+                    <pose>0 0 0 0 0 0</pose>
+                    <geometry>
+                    <mesh>
+                        <uri>models/Crazyflie/SAR_Base/meshes/CF_Assembly - Motor_Mount-5.STL</uri>
+                        <scale>1 1 1</scale>
+                    </mesh>
+                    </geometry>
+                    <material>
+                        <!--White-->                    
+                        <ambient>1 1 1 1</ambient>
+                        <diffuse>1 1 1 1</diffuse>
+                        <specular>0.1 0.1 0.1 128</specular>
+                    <lighting>1</lighting>
+                    </material>
+                </visual>
+
+                <visual name='CF_Motor_Mount_2'>
+                    <pose>0 0 0 0 0 0</pose>
+                    <geometry>
+                    <mesh>
+                        <uri>models/Crazyflie/SAR_Base/meshes/CF_Assembly - Motor_Mount-2.STL</uri>
+                        <scale>1 1 1</scale>
+                    </mesh>
+                    </geometry>
+                    <material>
+                        <!--White-->                    
+                        <ambient>1 1 1 1</ambient>
+                        <diffuse>1 1 1 1</diffuse>
+                        <specular>0.1 0.1 0.1 128</specular>
+                    <lighting>1</lighting>
+                    </material>
+                </visual>
+
+                <visual name='CF_Motor_Mount_1'>
+                    <pose>0 0 0 0 0 0</pose>
+                    <geometry>
+                    <mesh>
+                        <uri>models/Crazyflie/SAR_Base/meshes/CF_Assembly - Motor_Mount-6.STL</uri>
+                        <scale>1 1 1</scale>
+                    </mesh>
+                    </geometry>
+                    <material>
+                        <!--White-->                    
+                        <ambient>1 1 1 1</ambient>
+                        <diffuse>1 1 1 1</diffuse>
+                        <specular>0.1 0.1 0.1 128</specular>
+                    <lighting>1</lighting>
+                    </material>
+                </visual>
+
+
+                <visual name='CF_Motor_4'>
+                    <pose>0 0 0 0 0 0</pose>
+                    <geometry>
+                    <mesh>
+                        <uri>models/Crazyflie/SAR_Base/meshes/CF_Assembly - Motor-2.STL</uri>
+                        <scale>1 1 1</scale>
+                    </mesh>
+                    </geometry>
+                    <material>
+                        <!--Grey-->
+                        <ambient>0.3 0.3 0.3 1</ambient>
+                        <diffuse>0.7 0.7 0.7 1</diffuse>
+                        <specular>0.01 0.01 0.01 1.00 1.50</specular>
+                    <lighting>1</lighting>
+                    </material>
+                </visual>
+
+                <visual name='CF_Motor_3'>
+                    <pose>0 0 0 0 0 0</pose>
+                    <geometry>
+                    <mesh>
+                        <uri>models/Crazyflie/SAR_Base/meshes/CF_Assembly - Motor-5.STL</uri>
+                        <scale>1 1 1</scale>
+                    </mesh>
+                    </geometry>
+                    <material>
+                        <!--Grey-->
+                        <ambient>0.3 0.3 0.3 1</ambient>
+                        <diffuse>0.7 0.7 0.7 1</diffuse>
+                        <specular>0.01 0.01 0.01 1.00 1.50</specular>
+                    <lighting>1</lighting>
+                    </material>
+                </visual>
+
+                <visual name='CF_Motor_2'>
+                    <pose>0 0 0 0 0 0</pose>
+                    <geometry>
+                    <mesh>
+                        <uri>models/Crazyflie/SAR_Base/meshes/CF_Assembly - Motor-4.STL</uri>
+                        <scale>1 1 1</scale>
+                    </mesh>
+                    </geometry>
+                    <material>
+                        <!--Grey-->
+                        <ambient>0.3 0.3 0.3 1</ambient>
+                        <diffuse>0.7 0.7 0.7 1</diffuse>
+                        <specular>0.01 0.01 0.01 1.00 1.50</specular>
+                    <lighting>1</lighting>
+                    </material>
+                </visual>
+
+                <visual name='CF_Motor_1'>
+                    <pose>0 0 0 0 0 0</pose>
+                    <geometry>
+                    <mesh>
+                        <uri>models/Crazyflie/SAR_Base/meshes/CF_Assembly - Motor-3.STL</uri>
+                        <scale>1 1 1</scale>
+                    </mesh>
+                    </geometry>
+                    <material>
+                        <!--Grey-->
+                        <ambient>0.3 0.3 0.3 1</ambient>
+                        <diffuse>0.7 0.7 0.7 1</diffuse>
+                        <specular>0.01 0.01 0.01 1.00 1.50</specular>
+                    <lighting>1</lighting>
+                    </material>
+                </visual>
+
+                <collision name='body_collision'>
+                    <max_contacts>1</max_contacts>
+                    <pose>0 0 0.01 0 0 0</pose>
+                    <geometry>
+                    <box>
+                        <size>0.12 0.12 0.01</size>
+                    </box>
+                    </geometry>
+                    <surface>
+                    <friction>
+                        <ode>
+                        <mu>1</mu>
+                        <mu2>1</mu2>
+                        </ode>
+                    </friction>
+                    <bounce>
+                        <restitution_coefficient>0</restitution_coefficient>
+                    </bounce>
+                    <contact>
+                        <ode>
+                        <soft_cfm>0</soft_cfm>
+                        <soft_erp>0.8</soft_erp>
+                        </ode>
+                        <bullet>
+                        <soft_cfm>0</soft_cfm>
+                        <soft_erp>0.8</soft_erp>
+                        </bullet>
+                    </contact>
+                    </surface>
+                </collision>
+                
+                <collision name='base_collision'>
+                    <max_contacts>1</max_contacts>
+                    <pose>0 0 -0.005 0 0 0</pose>
+                    <geometry>
+                    <box>
+                        <size>0.075 0.075 0.005</size>
+                    </box>
+                    </geometry>
+                    <surface>
+                    <friction>
+                        <ode>
+                        <mu>1</mu>
+                        <mu2>1</mu2>
+                        </ode>
+                    </friction>
+                    <bounce>
+                        <restitution_coefficient>0</restitution_coefficient>
+                    </bounce>
+                    <contact>
+                        <ode>
+                        <soft_cfm>0</soft_cfm>
+                        <soft_erp>0.2</soft_erp>
+                        </ode>
+                        <bullet>
+                        <soft_cfm>0</soft_cfm>
+                        <soft_erp>0.2</soft_erp>
+                        </bullet>
+                    </contact>
+                    </surface>
+                </collision>
+            </link>
+
+            
+            <link name='Camera'>
+                <inertial>
+                    <mass>1e-6</mass>
+                    <inertia>
+                        <ixx>1e-9</ixx>
+                        <ixy>0</ixy>
+                        <ixz>0</ixz>
+                        <iyy>1e-9</iyy>
+                        <iyz>0</iyz>
+                        <izz>1e-9</izz>
+                    </inertia>
+                    <pose>0 0 0 0 0 0</pose>
+                </inertial>
+<!-- 
+                <sensor type="camera" name="Camera">
+                    <pose>0 0 0 0 0 0</pose>
+                    <update_rate>100</update_rate>       
+                    <visualize>false</visualize>
+                    <camera name="head">
+                        <save enabled="false">
+                            <path>/home/bhabas/Downloads/Video_images</path>
+                            
+                        </save>
+                        <horizontal_fov>1.435</horizontal_fov>         
+                        <image>
+                            <width>160</width>
+                            <height>160</height>
+                            <format>L8</format>
+                        </image>
+                        <clip>
+                            <near>0.02</near>
+                            <far>300</far>
+                        </clip>
+                        <noise>
+                            <type>gaussian</type>
+                             Noise is sampled independently per pixel on each frame.
+                                That pixel's noise value is added to each of its color
+                                channels, which at that point lie in the range [0,1]. 
+                            <mean>0.0</mean>
+                            <stddev>0.005</stddev>
+                        </noise>
+                        <lens>
+                            <type>sterographic</type>
+                        </lens>
+                    </camera>
+                    <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+                        <alwaysOn>true</alwaysOn>
+                        <updateRate>0.0</updateRate>
+                        <cameraName>SAR_Internal/camera</cameraName>
+                        <imageTopicName>image_raw</imageTopicName>
+                        <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+                        <frameName>camera_sensor</frameName>
+                        <hackBaseline>0.0</hackBaseline>
+                        <distortionK1>0.0</distortionK1>
+                        <distortionK2>0.0</distortionK2>
+                        <distortionK3>0.0</distortionK3>
+                        <distortionT1>0.0</distortionT1>
+                        <distortionT2>0.0</distortionT2>
+                    </plugin>
+                </sensor>
+-->
+
+                <visual name='camera_center'>
+                    <cast_shadows>0</cast_shadows>
+                    <pose>0 0 0 0 0 0</pose>
+                    <geometry>
+                    <sphere>
+                        <radius>0.002</radius>
+                    </sphere>
+                    </geometry>
+                    <material>
+                        <!--Blue-->
+                        <ambient>0 0 1</ambient>
+                        <diffuse>0 0 1</diffuse>
+                        <specular>0.1 0.1 0.1 1.00 1.00</specular>
+                        <shader type='pixel'>
+                            <normal_map>__default__</normal_map>
+                        </shader>
+                    </material>
+                </visual>
+            </link>
+
+            <joint name='Camera_Joint' type='fixed'>
+                <parent>SAR_Body</parent>
+                <child>Camera</child>
+            </joint>
+
+            <link name='Prop_1'>
+                <inertial>
+                    <mass>1e-6</mass>
+                    <inertia>
+                        <ixx>1e-9</ixx>
+                        <ixy>0</ixy>
+                        <ixz>0</ixz>
+                        <iyy>1e-9</iyy>
+                        <iyz>0</iyz>
+                        <izz>1e-9</izz>
+                    </inertia>
+                    <pose>0 0 0 0 0 0</pose>
+                </inertial>
+                <!--<pose relative_to='SAR_Body'>0.0325 -0.0325 0.014+2.0e-3  0 0 0</pose>-->
+                <pose>0.0325 -0.0325 1.014 0 0 0</pose>
+                <gravity>1</gravity>
+                <self_collide>0</self_collide>
+                <visual name='side_1'>
+                    <pose>0 0 0 0 0 0</pose>
+                    <geometry>
+                        <mesh>
+                            <uri>models/Crazyflie/SAR_Base/meshes/crazyflie_prop.dae</uri>
+                            <scale>1 1 1</scale>
+                        </mesh>
+                    </geometry>
+                    <material>
+                        <lighting>1</lighting>
+                            <!--Black-->
+                            <ambient>0 0 0 1</ambient>
+                            <diffuse>0 0 0 1</diffuse>
+                            <specular>0.1 0.1 0.1 1.00 5.00</specular>
+                        <shader type='pixel'>
+                            <normal_map>__default__</normal_map>
+                        </shader>
+                    </material>
+                </visual>
+                <visual name='side_2'>
+                    <pose>0 0 0 0 0 3.14</pose>
+                    <geometry>
+                        <mesh>
+                            <uri>models/Crazyflie/SAR_Base/meshes/crazyflie_prop.dae</uri>
+                            <scale>1 1 1</scale>
+                        </mesh>
+                    </geometry>
+                    <material>
+                        <lighting>1</lighting>
+                            <!--Black-->
+                            <ambient>0 0 0 1</ambient>
+                            <diffuse>0 0 0 1</diffuse>
+                            <specular>0.1 0.1 0.1 1.00 5.00</specular>
+                        <shader type='pixel'>
+                            <normal_map>__default__</normal_map>
+                        </shader>
+                    </material>
+                </visual>
+            </link>
+
+
+            <link name='Prop_2'>
+                <inertial>
+                    <mass>1e-6</mass>
+                    <inertia>
+                        <ixx>1e-9</ixx>
+                        <ixy>0</ixy>
+                        <ixz>0</ixz>
+                        <iyy>1e-9</iyy>
+                        <iyz>0</iyz>
+                        <izz>1e-9</izz>
+                    </inertia>
+                    <pose>0 0 0 0 0 0</pose>
+                </inertial>
+                <pose>-0.0325 -0.0325 1.014 0 0 0</pose>
+                <gravity>1</gravity>
+                <self_collide>0</self_collide>
+                <visual name='side_1'>
+                    <pose>0 0 0 0 0 0</pose>
+                    <geometry>
+                        <mesh>
+                            <uri>models/Crazyflie/SAR_Base/meshes/crazyflie_prop.dae</uri>
+                            <scale>1 1 1</scale>
+                        </mesh>
+                    </geometry>
+                    <material>
+                        <lighting>1</lighting>
+                            <!--Black-->
+                            <ambient>0 0 0 1</ambient>
+                            <diffuse>0 0 0 1</diffuse>
+                            <specular>0.1 0.1 0.1 1.00 5.00</specular>
+                        <shader type='pixel'>
+                            <normal_map>__default__</normal_map>
+                        </shader>
+                    </material>
+                </visual>
+                <visual name='side_2'>
+                    <pose>0 0 0 0 0 3.14</pose>
+                    <geometry>
+                        <mesh>
+                            <uri>models/Crazyflie/SAR_Base/meshes/crazyflie_prop.dae</uri>
+                            <scale>1 1 1</scale>
+                        </mesh>
+                    </geometry>
+                    <material>
+                        <lighting>1</lighting>
+                            <!--Black-->
+                            <ambient>0 0 0 1</ambient>
+                            <diffuse>0 0 0 1</diffuse>
+                            <specular>0.1 0.1 0.1 1.00 5.00</specular>
+                        <shader type='pixel'>
+                            <normal_map>__default__</normal_map>
+                        </shader>
+                    </material>
+                </visual>
+            </link>
+
+            <link name='Prop_3'>
+                <inertial>
+                    <mass>1e-6</mass>
+                    <inertia>
+                        <ixx>1e-9</ixx>
+                        <ixy>0</ixy>
+                        <ixz>0</ixz>
+                        <iyy>1e-9</iyy>
+                        <iyz>0</iyz>
+                        <izz>1e-9</izz>
+                    </inertia>
+                    <pose>0 0 0 0 0 0</pose>
+                </inertial>
+                <pose>-0.0325 0.0325 1.014 0 0 0</pose>
+                <gravity>1</gravity>
+                <self_collide>0</self_collide>
+                <visual name='side_1'>
+                    <pose>0 0 0 0 0 0</pose>
+                    <geometry>
+                        <mesh>
+                            <uri>models/Crazyflie/SAR_Base/meshes/crazyflie_prop.dae</uri>
+                            <scale>1 1 1</scale>
+                        </mesh>
+                    </geometry>
+                    <material>
+                        <lighting>1</lighting>
+                            <!--Black-->
+                            <ambient>0 0 0 1</ambient>
+                            <diffuse>0 0 0 1</diffuse>
+                            <specular>0.1 0.1 0.1 1.00 5.00</specular>
+                        <shader type='pixel'>
+                            <normal_map>__default__</normal_map>
+                        </shader>
+                    </material>
+                </visual>
+                <visual name='side_2'>
+                    <pose>0 0 0 0 0 3.14</pose>
+                    <geometry>
+                        <mesh>
+                            <uri>models/Crazyflie/SAR_Base/meshes/crazyflie_prop.dae</uri>
+                            <scale>1 1 1</scale>
+                        </mesh>
+                    </geometry>
+                    <material>
+                        <lighting>1</lighting>
+                            <!--Black-->
+                            <ambient>0 0 0 1</ambient>
+                            <diffuse>0 0 0 1</diffuse>
+                            <specular>0.1 0.1 0.1 1.00 5.00</specular>
+                        <shader type='pixel'>
+                            <normal_map>__default__</normal_map>
+                        </shader>
+                    </material>
+                </visual>
+            </link>
+
+            <link name='Prop_4'>
+                <inertial>
+                    <mass>1e-6</mass>
+                    <inertia>
+                        <ixx>1e-9</ixx>
+                        <ixy>0</ixy>
+                        <ixz>0</ixz>
+                        <iyy>1e-9</iyy>
+                        <iyz>0</iyz>
+                        <izz>1e-9</izz>
+                    </inertia>
+                    <pose>0 0 0 0 0 0</pose>
+                </inertial>
+                <pose>0.0325 0.0325 1.014 0 0 0</pose>
+                <gravity>1</gravity>
+                <self_collide>0</self_collide>
+                <visual name='side_1'>
+                    <pose>0 0 0 0 0 0</pose>
+                    <geometry>
+                        <mesh>
+                            <uri>models/Crazyflie/SAR_Base/meshes/crazyflie_prop.dae</uri>
+                            <scale>1 1 1</scale>
+                        </mesh>
+                    </geometry>
+                    <material>
+                        <lighting>1</lighting>
+                            <!--Black-->
+                            <ambient>0 0 0 1</ambient>
+                            <diffuse>0 0 0 1</diffuse>
+                            <specular>0.1 0.1 0.1 1.00 5.00</specular>
+                        <shader type='pixel'>
+                            <normal_map>__default__</normal_map>
+                        </shader>
+                    </material>
+                </visual>
+                <visual name='side_2'>
+                    <pose>0 0 0 0 0 3.14</pose>
+                    <geometry>
+                        <mesh>
+                            <uri>models/Crazyflie/SAR_Base/meshes/crazyflie_prop.dae</uri>
+                            <scale>1 1 1</scale>
+                        </mesh>
+                    </geometry>
+                    <material>
+                        <lighting>1</lighting>
+                            <!--Black-->
+                            <ambient>0 0 0 1</ambient>
+                            <diffuse>0 0 0 1</diffuse>
+                            <specular>0.1 0.1 0.1 1.00 5.00</specular>
+                        <shader type='pixel'>
+                            <normal_map>__default__</normal_map>
+                        </shader>
+                    </material>
+                </visual>
+            </link>
+
+            <joint name='Prop_1_Joint' type='revolute'>
+                <!--DH : Original was 
+                <pose>0 0 0 0 0 0</pose>
+                But I changed refers to "https://github.com/gazebosim/docs/blob/master/citadel/tutorials/building_robot/building_robot.sdf#L132"
+                 -->
+                <pose relative_to='Prop_1'/>
+                <parent>SAR_Body</parent>
+                <child>Prop_1</child>
+                <axis>
+                    <xyz expressed_in='__model__'>0 0 1</xyz>
+                    <limit>
+                        <lower>-1.79769e+308</lower> <!--negative infinity-->
+                        <upper>1.79769e+308</upper> <!--positive infinity-->
+                        <effort>-1</effort>
+                        <velocity>-1</velocity>
+                    </limit>
+                    <dynamics>
+                        <spring_reference>0</spring_reference>
+                        <spring_stiffness>0</spring_stiffness>
+                    </dynamics>
+                </axis>
+            </joint>
+
+            <joint name='Prop_2_Joint' type='revolute'>
+                <pose relative_to='Prop_2'/>
+                <parent>SAR_Body</parent>
+                <child>Prop_2</child>
+                <axis>
+                    <xyz expressed_in='__model__'>0 0 1</xyz>
+                    <limit>
+                        <lower>-1.79769e+308</lower>
+                        <upper>1.79769e+308</upper>
+                        <effort>-1</effort>
+                        <velocity>-1</velocity>
+                    </limit>
+                    <dynamics>
+                        <spring_reference>0</spring_reference>
+                        <spring_stiffness>0</spring_stiffness>
+                    </dynamics>
+                </axis>
+            </joint>
+
+            <joint name='Prop_3_Joint' type='revolute'>
+                <pose relative_to='Prop_3'/>
+                <parent>SAR_Body</parent>
+                <child>Prop_3</child>
+                <axis>
+                    <xyz expressed_in='__model__'>0 0 1</xyz>
+                    <limit>
+                        <lower>-1.79769e+308</lower>
+                        <upper>1.79769e+308</upper>
+                        <effort>-1</effort>
+                        <velocity>-1</velocity>
+                    </limit>
+                    <dynamics>
+                        <spring_reference>0</spring_reference>
+                        <spring_stiffness>0</spring_stiffness>
+                    </dynamics>
+                </axis>
+            </joint>
+
+            <joint name='Prop_4_Joint' type='revolute'>
+                <pose relative_to='Prop_4'/>
+                <parent>SAR_Body</parent>t
+                <child>Prop_4</child>
+                <axis>
+                    <xyz expressed_in='__model__'>0 0 1</xyz>
+                    <limit>
+                        <lower>-1.79769e+308</lower>
+                        <upper>1.79769e+308</upper>
+                        <effort>-1</effort>
+                        <velocity>-1</velocity>
+                    </limit>
+                    <dynamics>
+                        <spring_reference>0</spring_reference>
+                        <spring_stiffness>0</spring_stiffness>
+                    </dynamics>
+                </axis>
+            </joint>
+
+            <static>0</static>
+            <allow_auto_disable>1</allow_auto_disable>
+<!--
+            <plugin name='Motor_1_Plugin' filename='libMotor_Plugin.so'>
+            <Motor_Number>1</Motor_Number>
+            <Joint_Name>Prop_1_Joint</Joint_Name>
+            <Link_Name>Prop_1</Link_Name>
+            <Turning_Direction>ccw</Turning_Direction>
+            <Visual_Slowdown>100</Visual_Slowdown>
+            </plugin>
+
+            <plugin name='Motor_2_Plugin' filename='libMotor_Plugin.so'>
+            <Motor_Number>2</Motor_Number>
+            <Joint_Name>Prop_2_Joint</Joint_Name>
+            <Link_Name>Prop_2</Link_Name>
+            <Turning_Direction>cw</Turning_Direction>
+            <Visual_Slowdown>100</Visual_Slowdown>
+            </plugin>
+
+            <plugin name='Motor_3_Plugin' filename='libMotor_Plugin.so'>
+            <Motor_Number>3</Motor_Number>
+            <Joint_Name>Prop_3_Joint</Joint_Name>
+            <Link_Name>Prop_3</Link_Name>
+            <Turning_Direction>ccw</Turning_Direction>
+            <Visual_Slowdown>100</Visual_Slowdown>
+            </plugin>
+
+            <plugin name='Motor_4_Plugin' filename='libMotor_Plugin.so'>
+            <Motor_Number>4</Motor_Number>
+            <Joint_Name>Prop_4_Joint</Joint_Name>
+            <Link_Name>Prop_4</Link_Name>
+            <Turning_Direction>cw</Turning_Direction>
+            <Visual_Slowdown>100</Visual_Slowdown>
+            </plugin>
+
+            <plugin name='SAR_Update_Plugin' filename='libSAR_Update_Plugin.so'>
+            <CameraJointName>Camera_Joint</CameraJointName>
+            </plugin>
+
+
+            <plugin name='Vicon_plugin' filename='libgazebo_ros_p3d.so'>
+            <alwaysOn>true</alwaysOn>
+            <updateRate>1000</updateRate>
+            <bodyName>SAR_Body</bodyName>
+            <topicName>SAR_External/ExtPosition</topicName>
+            <frameName>world</frameName>
+            <xyzOffsets>0 0 0</xyzOffsets>
+            <rpyOffsets>0 0 0</rpyOffsets>
+            <robotNamespace>/</robotNamespace>
+            </plugin>
+
+            <plugin name="IMU_plugin" filename="libgazebo_ros_imu.so">
+            <alwaysOn>true</alwaysOn>
+            <updateRate>1000</updateRate>
+            <bodyName>SAR_Body</bodyName>
+            <topicName>SAR_Internal/IMU</topicName>
+            <serviceName>imu_service</serviceName>
+            <gaussianNoise>0.0</gaussianNoise>
+            <xyzOffset>0 0 0</xyzOffset>
+            <rpyOffset>0 0 0</rpyOffset>
+            <frameName>SAR_Body</frameName>
+            </plugin>
+-->
+
+        </model>
+    </world>
+</sdf>
