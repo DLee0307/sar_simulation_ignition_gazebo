@@ -17,9 +17,25 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-# uncomment the following section in order to fill in
-# further dependencies manually.
-# find_package(<dependency> REQUIRED)
+find_package(ignition-gazebo3 REQUIRED)
+
+add_library(${PROJECT_NAME} SHARED
+  plugins/src/my_plugin.cpp)
+
+ament_target_dependencies(${PROJECT_NAME}
+  "ignition-gazebo3")
+
+#install(DIRECTORY include/
+#  DESTINATION include)
+
+#install(DIRECTORY src/
+#DESTINATION src)
+
+install(TARGETS
+  ${PROJECT_NAME}
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

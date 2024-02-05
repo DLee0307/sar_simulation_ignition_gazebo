@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <world name="default">
+    <!-- Include a ground plane -->
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+
+    <!-- Include your plugin -->
+    <plugin name="my_plugin" filename="libsar_gazebo.so">
+      <!-- Plugin-specific parameters go here -->
+    </plugin>
+  </world>
+</sdf>
