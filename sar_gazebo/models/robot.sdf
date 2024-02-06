@@ -68,6 +68,12 @@ https://gazebosim.org/api/gazebo/4.2/migrationplugins.html
                 <stats_topic>/world/car_world/stats</stats_topic>
             </plugin>
 
+            <!-- Your Custom Plugin -->
+            <plugin filename="/home/dlee/ros2_ws/install/sar_gazebo/lib/libsar_gazebo.so" name="MyPlugin1">
+
+            
+            </plugin>
+
             <!-- World statistics -->
             <plugin filename="WorldStats" name="World stats">
                 <ignition-gui>

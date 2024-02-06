@@ -19,23 +19,19 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(ignition-gazebo3 REQUIRED)
 
-add_library(${PROJECT_NAME} SHARED
-  plugins/src/my_plugin.cpp)
+add_library(${PROJECT_NAME} SHARED src/MyPlugin.cpp)
+target_link_libraries(${PROJECT_NAME} ignition-gazebo3::ignition-gazebo3)
 
-ament_target_dependencies(${PROJECT_NAME}
-  "ignition-gazebo3")
+install(TARGETS ${PROJECT_NAME}
+        ARCHIVE DESTINATION lib
+        LIBRARY DESTINATION lib
+        RUNTIME DESTINATION bin)
 
 #install(DIRECTORY include/
 #  DESTINATION include)
 
 #install(DIRECTORY src/
 #DESTINATION src)
-
-install(TARGETS
-  ${PROJECT_NAME}
-  ARCHIVE DESTINATION lib
-  LIBRARY DESTINATION lib
-  RUNTIME DESTINATION bin)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
