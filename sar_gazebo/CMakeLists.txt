@@ -19,7 +19,7 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(ignition-gazebo3 REQUIRED)
 
-add_library(${PROJECT_NAME} SHARED src/MyPlugin.cpp)
+add_library(${PROJECT_NAME} SHARED plugins/src/MyPlugin.cpp)
 target_link_libraries(${PROJECT_NAME} ignition-gazebo3::ignition-gazebo3)
 
 install(TARGETS ${PROJECT_NAME}

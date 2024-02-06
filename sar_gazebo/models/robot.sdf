@@ -27,7 +27,12 @@ https://gazebosim.org/api/gazebo/4.2/migrationplugins.html
             filename="ignition-gazebo-scene-broadcaster-system"
             name="ignition::gazebo::systems::SceneBroadcaster">
         </plugin>
-
+            
+        <!-- Your Custom Plugin -->
+        <plugin filename="/home/dlee/ros2_ws/install/sar_gazebo/lib/libsar_gazebo.so" name="MyPlugin">
+    
+        </plugin>
+        
         <gui fullscreen="0">
 
             <!-- 3D scene -->
@@ -68,11 +73,7 @@ https://gazebosim.org/api/gazebo/4.2/migrationplugins.html
                 <stats_topic>/world/car_world/stats</stats_topic>
             </plugin>
 
-            <!-- Your Custom Plugin -->
-            <plugin filename="/home/dlee/ros2_ws/install/sar_gazebo/lib/libsar_gazebo.so" name="MyPlugin1">
 
-            
-            </plugin>
 
             <!-- World statistics -->
             <plugin filename="WorldStats" name="World stats">
