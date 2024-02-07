@@ -19,10 +19,20 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(ignition-gazebo3 REQUIRED)
 
-add_library(${PROJECT_NAME} SHARED plugins/src/MyPlugin.cpp)
-target_link_libraries(${PROJECT_NAME} ignition-gazebo3::ignition-gazebo3)
+include_directories(plugins/include ${ignition-gazebo3_INCLUDE_DIRS})
 
-install(TARGETS ${PROJECT_NAME}
+add_library(MyPlugin SHARED plugins/src/MyPlugin.cpp)
+target_link_libraries(MyPlugin ignition-gazebo3::ignition-gazebo3)
+
+install(TARGETS MyPlugin
+        ARCHIVE DESTINATION lib
+        LIBRARY DESTINATION lib
+        RUNTIME DESTINATION bin)
+
+add_library(Motor_Plugin SHARED plugins/src/Motor_Plugin.cpp)
+target_link_libraries(Motor_Plugin ignition-gazebo3::ignition-gazebo3)
+
+install(TARGETS Motor_Plugin
         ARCHIVE DESTINATION lib
         LIBRARY DESTINATION lib
         RUNTIME DESTINATION bin)

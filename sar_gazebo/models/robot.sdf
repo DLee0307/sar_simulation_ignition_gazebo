@@ -28,8 +28,13 @@ https://gazebosim.org/api/gazebo/4.2/migrationplugins.html
             name="ignition::gazebo::systems::SceneBroadcaster">
         </plugin>
             
-        <!-- Your Custom Plugin -->
-        <plugin filename="/home/dlee/ros2_ws/install/sar_gazebo/lib/libsar_gazebo.so" name="MyPlugin">
+        <!-- DH's Custom Plugin 
+        <plugin filename="/home/dlee/ros2_ws/install/sar_gazebo/lib/libMyPlugin.so" name="MyPlugin">
+    
+        </plugin>-->
+        
+        <!-- Motor_Plugin -->
+        <plugin filename="/home/dlee/ros2_ws/install/sar_gazebo/lib/libMotor_Plugin.so" name="Motor_Plugin">
     
         </plugin>
         
