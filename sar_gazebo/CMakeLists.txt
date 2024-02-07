@@ -18,19 +18,38 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(ignition-gazebo3 REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(ignition-physics3 REQUIRED)
+find_package(ignition-math6 REQUIRED)
 
-include_directories(plugins/include ${ignition-gazebo3_INCLUDE_DIRS})
+include_directories(
+  plugins/include
+  ${ignition-gazebo3_INCLUDE_DIRS}
+  ${ignition-physics3_INCLUDE_DIRS}
+  ${ignition-math6_INCLUDE_DIRS}
+)
 
 add_library(MyPlugin SHARED plugins/src/MyPlugin.cpp)
-target_link_libraries(MyPlugin ignition-gazebo3::ignition-gazebo3)
+ament_target_dependencies(MyPlugin rclcpp)
+target_link_libraries(MyPlugin 
+  ignition-gazebo3::ignition-gazebo3
+  ignition-physics3::ignition-physics3
+  ignition-math6::ignition-math6
+)
 
 install(TARGETS MyPlugin
         ARCHIVE DESTINATION lib
         LIBRARY DESTINATION lib
         RUNTIME DESTINATION bin)
 
+
 add_library(Motor_Plugin SHARED plugins/src/Motor_Plugin.cpp)
-target_link_libraries(Motor_Plugin ignition-gazebo3::ignition-gazebo3)
+ament_target_dependencies(Motor_Plugin rclcpp)
+target_link_libraries(Motor_Plugin 
+  ignition-gazebo3::ignition-gazebo3
+  ignition-physics3::ignition-physics3
+  ignition-math6::ignition-math6
+)
 
 install(TARGETS Motor_Plugin
         ARCHIVE DESTINATION lib
@@ -45,12 +64,6 @@ install(TARGETS Motor_Plugin
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
-  # the following line skips the linter which checks for copyrights
-  # uncomment the line when a copyright and license is not present in all source files
-  #set(ament_cmake_copyright_FOUND TRUE)
-  # the following line skips cpplint (only works in a git repo)
-  # uncomment the line when this package is not in a git repo
-  #set(ament_cmake_cpplint_FOUND TRUE)
   ament_lint_auto_find_test_dependencies()
 endif()
 

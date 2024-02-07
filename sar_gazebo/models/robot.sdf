@@ -28,15 +28,8 @@ https://gazebosim.org/api/gazebo/4.2/migrationplugins.html
             name="ignition::gazebo::systems::SceneBroadcaster">
         </plugin>
             
-        <!-- DH's Custom Plugin 
-        <plugin filename="/home/dlee/ros2_ws/install/sar_gazebo/lib/libMyPlugin.so" name="MyPlugin">
-    
-        </plugin>-->
-        
-        <!-- Motor_Plugin -->
-        <plugin filename="/home/dlee/ros2_ws/install/sar_gazebo/lib/libMotor_Plugin.so" name="Motor_Plugin">
-    
-        </plugin>
+      
+
         
         <gui fullscreen="0">
 
@@ -475,7 +468,7 @@ https://gazebosim.org/api/gazebo/4.2/migrationplugins.html
                     </inertia>
                     <pose>0 0 0 0 0 0</pose>
                 </inertial>
-<!-- 
+                <!-- 
                 <sensor type="camera" name="Camera">
                     <pose>0 0 0 0 0 0</pose>
                     <update_rate>100</update_rate>       
@@ -522,7 +515,7 @@ https://gazebosim.org/api/gazebo/4.2/migrationplugins.html
                         <distortionT2>0.0</distortionT2>
                     </plugin>
                 </sensor>
--->
+                -->
 
                 <visual name='camera_center'>
                     <cast_shadows>0</cast_shadows>
@@ -857,8 +850,12 @@ https://gazebosim.org/api/gazebo/4.2/migrationplugins.html
 
             <static>0</static>
             <allow_auto_disable>1</allow_auto_disable>
-<!--
-            <plugin name='Motor_1_Plugin' filename='libMotor_Plugin.so'>
+            
+            <!-- Motor_Plugin 
+            <plugin filename="/home/dlee/ros2_ws/install/sar_gazebo/lib/libMotor_Plugin.so" name="Motor_Plugin">
+            </plugin>-->
+
+            <plugin filename="/home/dlee/ros2_ws/install/sar_gazebo/lib/libMotor_Plugin.so" name="Motor_Plugin">
             <Motor_Number>1</Motor_Number>
             <Joint_Name>Prop_1_Joint</Joint_Name>
             <Link_Name>Prop_1</Link_Name>
@@ -866,6 +863,7 @@ https://gazebosim.org/api/gazebo/4.2/migrationplugins.html
             <Visual_Slowdown>100</Visual_Slowdown>
             </plugin>
 
+            <!--
             <plugin name='Motor_2_Plugin' filename='libMotor_Plugin.so'>
             <Motor_Number>2</Motor_Number>
             <Joint_Name>Prop_2_Joint</Joint_Name>
@@ -917,7 +915,7 @@ https://gazebosim.org/api/gazebo/4.2/migrationplugins.html
             <rpyOffset>0 0 0</rpyOffset>
             <frameName>SAR_Body</frameName>
             </plugin>
--->
+            -->
 
         </model>
     </world>

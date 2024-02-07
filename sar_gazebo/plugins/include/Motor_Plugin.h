@@ -1,10 +1,15 @@
 #include <iostream>
 
+#include <rclcpp/rclcpp.hpp>
 #include <ignition/gazebo/Model.hh>
 #include <ignition/gazebo/Util.hh>
 #include <ignition/gazebo/System.hh>
 #include <ignition/plugin/Register.hh>
 #include <ignition/plugin/RegisterMore.hh>
+//#include <ignition/physics/Physics.hh> error can solve using below webpage?
+//https://gazebosim.org/api/gazebo/5.0/src_2systems_2physics_2Physics_8hh.html
+#include <ignition/transport/Node.hh>
+#include <ignition/common/Time.hh>
 
 class Motor_Plugin : public ignition::gazebo::System,
                      public ignition::gazebo::ISystemConfigure,
