@@ -12,6 +12,7 @@ void Motor_Plugin::Configure(const ignition::gazebo::Entity &_entity,
     // need to check
     this->model = ignition::gazebo::Model(_entity);
 
+    // GRAB MOTOR JOINT FROM SDF
     if (!_sdf->HasElement("Joint_Name")){
         ignerr << "Missing required parameter <Joint_Name>" << std::endl;
         return;}
@@ -24,6 +25,31 @@ void Motor_Plugin::Configure(const ignition::gazebo::Entity &_entity,
     if (jointEntity == ignition::gazebo::kNullEntity){
         ignerr << "Joint '" << Motor_Joint_Name << "' not found." << std::endl;
         return;}
+
+
+
+
+    // GRAB ROTOR LINK FROM SDF
+    if (!_sdf->HasElement("Link_Name")){
+        ignerr << "Missing required parameter <Link_Name>" << std::endl;
+        return;}
+
+    std::string Prop_Link_Name = _sdf->Get<std::string>("Link_Name");
+    std::cout << "\t Link Name:\t" << Prop_Link_Name << std::endl;
+
+    // Find the joint entity by name
+    auto linkEntity = this->model.LinkByName(_ecm, Prop_Link_Name);
+    if (linkEntity == ignition::gazebo::kNullEntity){
+        ignerr << "Link '" << Prop_Link_Name << "' not found." << std::endl;
+        return;}
+
+
+    // COLLECT OTHER PARAMS FROM SDF
+    int Motor_Number = _sdf->Get<int>("Motor_Number");
+    double Rot_Vel_Slowdown = _sdf->Get<double>("Visual_Slowdown");
+
+
+
 }
 
 void Motor_Plugin::PreUpdate(const ignition::gazebo::UpdateInfo &_info,
