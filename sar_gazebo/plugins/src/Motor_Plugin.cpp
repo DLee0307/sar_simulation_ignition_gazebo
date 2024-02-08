@@ -9,7 +9,7 @@ void Motor_Plugin::Configure(const ignition::gazebo::Entity &_entity,
     // Check plugin is running
     std::cout << "Loading Motor_Plugin!!!\n";
     
-    // need to check
+    // if remove canno find joint
     this->model = ignition::gazebo::Model(_entity);
 
     // GRAB MOTOR JOINT FROM SDF
@@ -25,8 +25,7 @@ void Motor_Plugin::Configure(const ignition::gazebo::Entity &_entity,
     if (jointEntity == ignition::gazebo::kNullEntity){
         ignerr << "Joint '" << Motor_Joint_Name << "' not found." << std::endl;
         return;}
-
-
+    std::cout << "\t Joint Entity Name:\t" << jointEntity << std::endl;
 
 
     // GRAB ROTOR LINK FROM SDF
@@ -37,7 +36,7 @@ void Motor_Plugin::Configure(const ignition::gazebo::Entity &_entity,
     std::string Prop_Link_Name = _sdf->Get<std::string>("Link_Name");
     std::cout << "\t Link Name:\t" << Prop_Link_Name << std::endl;
 
-    // Find the joint entity by name
+    // Find the Link entity by name
     auto linkEntity = this->model.LinkByName(_ecm, Prop_Link_Name);
     if (linkEntity == ignition::gazebo::kNullEntity){
         ignerr << "Link '" << Prop_Link_Name << "' not found." << std::endl;
@@ -48,16 +47,66 @@ void Motor_Plugin::Configure(const ignition::gazebo::Entity &_entity,
     int Motor_Number = _sdf->Get<int>("Motor_Number");
     double Rot_Vel_Slowdown = _sdf->Get<double>("Visual_Slowdown");
 
+    // COLLECT MOTOR TURNING DIRECTION
+    if (_sdf->Get<std::string>("Turning_Direction") == "ccw"){
+        Turn_Direction = 1;
+    }else if(_sdf->Get<std::string>("Turning_Direction") == "cw"){
+        Turn_Direction = -1;
+    }else{
+        ignerr << "[gazebo_motor_model] Please only use 'cw' or 'ccw' as Turning_Direction" << std::endl;
+    };
 
+
+
+
+    // Set visual velocity of rotor
+    Rot_Vel = sqrt(1);
+    auto jointVelocityCmd = _ecm.Component<ignition::gazebo::components::JointVelocityCmd>(jointEntity);    
+    if (jointVelocityCmd)
+    {
+        jointVelocityCmd->Data()[0] = Turn_Direction * Rot_Vel / Rot_Vel_Slowdown;
+    }
 
 }
 
 void Motor_Plugin::PreUpdate(const ignition::gazebo::UpdateInfo &_info,
                          ignition::gazebo::EntityComponentManager &_ecm)
 {
-    //(void)_info; // Explicitly mark _info as unused
-    //(void)_ecm;  // Explicitly mark _ecm as unused
+
+
+    (void)_info; // Explicitly mark _info as unused
+    (void)_ecm;  // Explicitly mark _ecm as unused
 }
+
+
+void Motor_Plugin::Update(const ignition::gazebo::UpdateInfo &_info, 
+                        ignition::gazebo::EntityComponentManager &_ecm)
+{
+    if (_info.paused)
+        return;
+
+    double currentSimTime = std::chrono::duration<double>(_info.simTime).count();
+    // Calculate the time elapsed since the last update
+    double timeStep = currentSimTime - Prev_Sim_time;
+    Prev_Sim_time = currentSimTime;
+    // Your logic to update forces and moments
+    //UpdateForcesAndMoments();
+
+    std::cout << "\t Joint Entity Name:****************\t" << jointEntity << std::endl;
+
+
+    // Set visual velocity of rotor
+    double Rot_Vel = sqrt(1);
+
+    auto jointVelocityCmd = _ecm.Component<ignition::gazebo::components::JointVelocityCmd>(jointEntity);
+    
+    if (jointVelocityCmd)
+    {
+        jointVelocityCmd->Data()[0] = Turn_Direction * Rot_Vel / Rot_Vel_Slowdown;    
+    }
+}
+
+
 
 IGNITION_ADD_PLUGIN(Motor_Plugin,
                     ignition::gazebo::System,

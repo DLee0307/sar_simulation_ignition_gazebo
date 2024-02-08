@@ -11,6 +11,7 @@
 #include <ignition/transport/Node.hh>
 #include <ignition/common/Time.hh>
 #include <sdf/sdf.hh>
+#include <ignition/gazebo/components/JointVelocityCmd.hh>
 
 // CUSTOM INCLUDES
 //#include "sar_msgs/CTRL_Data.h"
@@ -23,16 +24,12 @@
 
 class Motor_Plugin : public ignition::gazebo::System,
                      public ignition::gazebo::ISystemConfigure,
-                     public ignition::gazebo::ISystemPreUpdate
+                     public ignition::gazebo::ISystemPreUpdate,
+                     public ignition::gazebo::ISystemUpdate
 {
 public:
     // Constructor
-    Motor_Plugin(){
-        // make node
-        rclcpp::init(0, nullptr);
-        node_ = rclcpp::Node::make_shared("motor_plugin_node");            
-            
-    }
+    Motor_Plugin();
 
     // Destructor
     virtual ~Motor_Plugin() = default;
@@ -46,10 +43,18 @@ public:
     // PreUpdate method
     void PreUpdate(const ignition::gazebo::UpdateInfo &_info,
                    ignition::gazebo::EntityComponentManager &_ecm) override;
-private:
-            // need to check
+    
+    // Update method
+    void Update(const ignition::gazebo::UpdateInfo &_info, 
+                ignition::gazebo::EntityComponentManager &_ecm) override;
+                
+
+    
+
+private:            
+            // if remove we cannot find joint
             ignition::gazebo::Model model;
-            
+
             //DH's editing make node
             rclcpp::Node::SharedPtr node_;
             
@@ -100,3 +105,7 @@ private:
             //ros::Publisher MS_Data_Pub = nh.advertise<sar_msgs::MS>("/SAR_Internal/MS",1);
             //sar_msgs::MS Thrust_msg;
 };
+
+Motor_Plugin::Motor_Plugin() : Prev_Sim_time(0.0)
+{
+}
