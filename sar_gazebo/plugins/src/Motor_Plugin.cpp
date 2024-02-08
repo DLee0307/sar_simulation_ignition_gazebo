@@ -58,13 +58,41 @@ void Motor_Plugin::Configure(const ignition::gazebo::Entity &_entity,
     };
 
 
-    // Set visual velocity of rotor
+
+    // Create a JointVelocityCmd component if it doesn't exist    
+    if (!_ecm.EntityHasComponentType(jointEntity, ignition::gazebo::components::JointVelocityCmd().TypeId()))
+    {
+        _ecm.CreateComponent(jointEntity, ignition::gazebo::components::JointVelocityCmd());
+    }
+
+    // Set the force or torque on the joint using the correct component
+    //auto& jointVelocityCmd = _ecm.Component<ignition::gazebo::components::JointVelocityCmd>(jointEntity);
+    auto jointVelocityCmd = _ecm.Component<ignition::gazebo::components::JointVelocityCmd>(jointEntity);
+    std::cout << "\t jointVelocityCmd!!!!!!!!:\t" << jointVelocityCmd << std::endl;
+    jointVelocityCmd->Data().resize(1);
+    std::cout << "\t jointVelocityCmd!!!!!!!!:\t" << jointVelocityCmd->Data().size() << std::endl;
+    
+    if (jointVelocityCmd && jointVelocityCmd->Data().size() > 0){
+        jointVelocityCmd->Data()[0] = Turn_Direction * 100;
+        std::cout << "\t jointVelocityCmd@@\t" << jointVelocityCmd->Data()[0] << std::endl;
+    }
+    else
+    {
+        
+    }
+
+
+    
+    /*// Set visual velocity of rotor
+    
     Rot_Vel = sqrt(1);
-    auto jointVelocityCmd = _ecm.Component<ignition::gazebo::components::JointVelocityCmd>(jointEntity);    
+    auto jointVelocityCmd = _ecm.Component<ignition::gazebo::components::JointVelocityCmd>(jointEntity);
+    std::cout << "\t jointVelocityCmd!!!!!!!!:\t" << jointVelocityCmd << std::endl;
+    
     if (jointVelocityCmd)
     {
-        jointVelocityCmd->Data()[0] = Turn_Direction * Rot_Vel / Rot_Vel_Slowdown;
-    }
+        jointVelocityCmd->Data()[0] = Turn_Direction * 10;
+    }*/
 
 }
 
