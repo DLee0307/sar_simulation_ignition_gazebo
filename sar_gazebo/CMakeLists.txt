@@ -56,6 +56,22 @@ install(TARGETS Motor_Plugin
         LIBRARY DESTINATION lib
         RUNTIME DESTINATION bin)
 
+
+add_library(MyStstemPlugin SHARED plugins/src/MyStstemPlugin.cpp)
+ament_target_dependencies(MyStstemPlugin rclcpp)
+target_link_libraries(MyStstemPlugin 
+  ignition-gazebo3::ignition-gazebo3
+  ignition-physics3::ignition-physics3
+  ignition-math6::ignition-math6
+)
+
+install(TARGETS MyStstemPlugin
+        ARCHIVE DESTINATION lib
+        LIBRARY DESTINATION lib
+        RUNTIME DESTINATION bin)
+
+
+
 #install(DIRECTORY include/
 #  DESTINATION include)
 

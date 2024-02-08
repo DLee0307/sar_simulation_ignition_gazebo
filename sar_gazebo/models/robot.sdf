@@ -28,9 +28,12 @@ https://gazebosim.org/api/gazebo/4.2/migrationplugins.html
             name="ignition::gazebo::systems::SceneBroadcaster">
         </plugin>
             
-      
+        <!-- 
+        <plugin filename="/home/dlee/ros2_ws/install/sar_gazebo/lib/libMyStstemPlugin.so" name="MySystemPlugin">
+        </plugin>-->
 
-        
+
+        <!-- Other world elements -->
         <gui fullscreen="0">
 
             <!-- 3D scene -->

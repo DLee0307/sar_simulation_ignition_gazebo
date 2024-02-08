@@ -9,7 +9,7 @@ void Motor_Plugin::Configure(const ignition::gazebo::Entity &_entity,
     // Check plugin is running
     std::cout << "Loading Motor_Plugin!!!\n";
     
-    // if remove canno find joint
+    // if remove cannot find joint
     this->model = ignition::gazebo::Model(_entity);
 
     // GRAB MOTOR JOINT FROM SDF
@@ -41,6 +41,7 @@ void Motor_Plugin::Configure(const ignition::gazebo::Entity &_entity,
     if (linkEntity == ignition::gazebo::kNullEntity){
         ignerr << "Link '" << Prop_Link_Name << "' not found." << std::endl;
         return;}
+    std::cout << "\t Link Entity Name:\t" << linkEntity << std::endl;
 
 
     // COLLECT OTHER PARAMS FROM SDF
@@ -55,8 +56,6 @@ void Motor_Plugin::Configure(const ignition::gazebo::Entity &_entity,
     }else{
         ignerr << "[gazebo_motor_model] Please only use 'cw' or 'ccw' as Turning_Direction" << std::endl;
     };
-
-
 
 
     // Set visual velocity of rotor
@@ -82,7 +81,10 @@ void Motor_Plugin::PreUpdate(const ignition::gazebo::UpdateInfo &_info,
 void Motor_Plugin::Update(const ignition::gazebo::UpdateInfo &_info, 
                         ignition::gazebo::EntityComponentManager &_ecm)
 {
-    if (_info.paused)
+    
+    
+    
+    /*if (_info.paused)
         return;
 
     double currentSimTime = std::chrono::duration<double>(_info.simTime).count();
@@ -91,8 +93,8 @@ void Motor_Plugin::Update(const ignition::gazebo::UpdateInfo &_info,
     Prev_Sim_time = currentSimTime;
     // Your logic to update forces and moments
     //UpdateForcesAndMoments();
-
-    std::cout << "\t Joint Entity Name:****************\t" << jointEntity << std::endl;
+    std::cout << "\t Joint Name:\t" << Motor_Joint_Name << std::endl;
+    std::cout << "\t Joint Entity Name:\t" << jointEntity << std::endl;
 
 
     // Set visual velocity of rotor
@@ -103,7 +105,7 @@ void Motor_Plugin::Update(const ignition::gazebo::UpdateInfo &_info,
     if (jointVelocityCmd)
     {
         jointVelocityCmd->Data()[0] = Turn_Direction * Rot_Vel / Rot_Vel_Slowdown;    
-    }
+    }*/
 }
 
 
@@ -111,4 +113,7 @@ void Motor_Plugin::Update(const ignition::gazebo::UpdateInfo &_info,
 IGNITION_ADD_PLUGIN(Motor_Plugin,
                     ignition::gazebo::System,
                     ignition::gazebo::ISystemConfigure,
-                    ignition::gazebo::ISystemPreUpdate)
+                    ignition::gazebo::ISystemPreUpdate,
+                    ignition::gazebo::ISystemUpdate)
+                    
+//IGNITION_ADD_PLUGIN_ALIAS(Motor_Plugin, "my_namespace::Motor_Plugin")
