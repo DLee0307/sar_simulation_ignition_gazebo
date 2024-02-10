@@ -70,6 +70,31 @@ install(TARGETS MyStstemPlugin
         LIBRARY DESTINATION lib
         RUNTIME DESTINATION bin)
 
+add_library(MyJointControllerPlugin SHARED plugins/src/MyJointControllerPlugin.cpp)
+ament_target_dependencies(MyJointControllerPlugin rclcpp)
+target_link_libraries(MyJointControllerPlugin 
+  ignition-gazebo3::ignition-gazebo3
+  ignition-physics3::ignition-physics3
+  ignition-math6::ignition-math6
+)
+
+install(TARGETS MyJointControllerPlugin
+        ARCHIVE DESTINATION lib
+        LIBRARY DESTINATION lib
+        RUNTIME DESTINATION bin)
+
+add_library(DiffDrive SHARED plugins/src/DiffDrive.cc)
+ament_target_dependencies(DiffDrive rclcpp)
+target_link_libraries(DiffDrive 
+  ignition-gazebo3::ignition-gazebo3
+  ignition-physics3::ignition-physics3
+  ignition-math6::ignition-math6
+)
+
+install(TARGETS DiffDrive
+        ARCHIVE DESTINATION lib
+        LIBRARY DESTINATION lib
+        RUNTIME DESTINATION bin)
 
 
 #install(DIRECTORY include/

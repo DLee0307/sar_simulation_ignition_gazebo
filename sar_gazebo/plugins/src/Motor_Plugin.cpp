@@ -1,5 +1,5 @@
 #include "Motor_Plugin.h"
-
+//https://gist.github.com/nullpo24/146f253f0d789cb10c680786e7582940
 //Configure called once when the simulation starts or when the plugin is first loaded.
 void Motor_Plugin::Configure(const ignition::gazebo::Entity &_entity,
                          const std::shared_ptr<const sdf::Element> &_sdf,
@@ -68,17 +68,17 @@ void Motor_Plugin::Configure(const ignition::gazebo::Entity &_entity,
     // Set the force or torque on the joint using the correct component
     //auto& jointVelocityCmd = _ecm.Component<ignition::gazebo::components::JointVelocityCmd>(jointEntity);
     auto jointVelocityCmd = _ecm.Component<ignition::gazebo::components::JointVelocityCmd>(jointEntity);
-    std::cout << "\t jointVelocityCmd!!!!!!!!:\t" << jointVelocityCmd << std::endl;
+    std::cout << "\t jointVelocityCmd:\t" << jointVelocityCmd << std::endl;
     jointVelocityCmd->Data().resize(1);
-    std::cout << "\t jointVelocityCmd!!!!!!!!:\t" << jointVelocityCmd->Data().size() << std::endl;
-    
+    std::cout << "\t jointVelocityCmd data size:\t" << jointVelocityCmd->Data().size() << std::endl;
+
     if (jointVelocityCmd && jointVelocityCmd->Data().size() > 0){
         jointVelocityCmd->Data()[0] = Turn_Direction * 100;
-        std::cout << "\t jointVelocityCmd@@\t" << jointVelocityCmd->Data()[0] << std::endl;
-    }
-    else
-    {
+        std::cout << "\t jointVelocityCmd data \t" << jointVelocityCmd->Data()[0] << std::endl;
         
+
+    }
+    else{  
     }
 
 

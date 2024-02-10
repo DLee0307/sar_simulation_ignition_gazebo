@@ -320,10 +320,18 @@
                 <child>caster</child>
             </joint>
 
-
+            <!--libignition-gazebo-diff-drive-system.so
+            ignition::gazebo::systems::DiffDrive
+            
+            /home/dlee/ros2_ws/install/sar_gazebo/lib/libMyJointControllerPlugin.so
+            MyJointControllerPlugin
+            
+            /home/dlee/ros2_ws/install/sar_gazebo/lib/libDiffDrive.so
+            ignition::gazebo::systems::DiffDrive-->
             <plugin
-                filename="libignition-gazebo-diff-drive-system.so"
-                name="ignition::gazebo::systems::DiffDrive">
+                filename="/home/dlee/ros2_ws/install/sar_gazebo/lib/libMyJointControllerPlugin.so"
+                name="MyJointControllerPlugin">
+                <model>vehicle_blue</model>
                 <left_joint>left_wheel_joint</left_joint>
                 <right_joint>right_wheel_joint</right_joint>
                 <wheel_separation>1.2</wheel_separation>

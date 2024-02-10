@@ -19,6 +19,7 @@
 #include <ignition/gazebo/components/Serialization.hh>
 #include <ignition/gazebo/config.hh>
 #include <ignition/gazebo/Export.hh>
+#include <ignition/gazebo/components/JointPosition.hh>
 
 // CUSTOM INCLUDES
 //#include "sar_msgs/CTRL_Data.h"
