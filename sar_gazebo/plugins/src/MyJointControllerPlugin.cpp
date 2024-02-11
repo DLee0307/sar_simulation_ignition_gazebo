@@ -115,6 +115,54 @@ void MyJointControllerPlugin::Configure(const ignition::gazebo::Entity &_entity,
         speedLimiter.SetMaxJerk(maxJerk);
     }
     
+    /*this->dataPtr->limiterLin = std::make_unique<SpeedLimiter>(
+        hasVelocityLimits, hasAccelerationLimits, hasJerkLimits,
+        minVel, maxVel, minAccel, maxAccel, minJerk, maxJerk);
+    
+    this->dataPtr->limiterAng = std::make_unique<SpeedLimiter>(
+        hasVelocityLimits, hasAccelerationLimits, hasJerkLimits,
+        minVel, maxVel, minAccel, maxAccel, minJerk, maxJerk);*/
+    
+    double odomFreq = _sdf->Get<double>("odom_publish_frequency", 50).first;
+    if (odomFreq > 0)
+    {
+        std::chrono::duration<double> odomPer{1 / odomFreq};
+        this->dataPtr->odomPubPeriod =
+        std::chrono::duration_cast<std::chrono::steady_clock::duration>(odomPer);
+    }
+
+
+    // Setup odometry.
+    this->dataPtr->odom.SetWheelParams(this->dataPtr->wheelSeparation,
+        this->dataPtr->wheelRadius, this->dataPtr->wheelRadius);
+
+    // Subscribe to commands
+    std::string topic{"/model/" + this->dataPtr->model.Name(_ecm) + "/cmd_vel"};
+    if (_sdf->HasElement("topic"))
+        topic = _sdf->Get<std::string>("topic");
+    std::cout << "topic:" << topic << std::endl;
+    this->dataPtr->node.Subscribe(topic, &MyJointControllerPluginPrivate::OnCmdVel,
+        this->dataPtr.get());
+
+    std::string odomTopic{"/model/" + this->dataPtr->model.Name(_ecm) +
+        "/odometry"};
+    this->dataPtr->odomPub = this->dataPtr->node.Advertise<ignition::msgs::Odometry>(
+        odomTopic);
+
+
+    // Subscribe to pose commands
+    // this->dataPtr->node.Subscribe("/PosePublisher/geometry_msgs/Pose", &DiffDrivePrivate::OnCmdPose, this->dataPtr.get());
+    this->dataPtr->node.Subscribe("/pose_publisher", &MyJointControllerPluginPrivate::OnCmdPose, this->dataPtr.get());
+
+    if (_sdf->HasElement("frame_id"))
+        this->dataPtr->sdfFrameId = _sdf->Get<std::string>("frame_id");
+
+    if (_sdf->HasElement("child_frame_id"))
+        this->dataPtr->sdfChildFrameId = _sdf->Get<std::string>("child_frame_id");
+
+    ignmsg << "DiffDrive subscribing to twist messages on [" << topic << "]"
+            << std::endl;
+
     std::cout << "\t Link Entity Name:\t" << ptr << std::endl;
 }
 
@@ -137,7 +185,18 @@ void MyJointControllerPlugin::Update(const ignition::gazebo::UpdateInfo &_info,
 
 }
 
+void MyJointControllerPluginPrivate::OnCmdVel(const ignition::msgs::Twist &_msg)
+{
+  std::lock_guard<std::mutex> lock(this->mutex);
+  this->targetVel = _msg;
+}
 
+
+void MyJointControllerPluginPrivate::OnCmdPose(const ignition::msgs::Pose &_msg)
+{
+  std::lock_guard<std::mutex> lock(this->mutex);
+  this->targetPose = _msg;
+}
 
 IGNITION_ADD_PLUGIN(MyJointControllerPlugin,
                     ignition::gazebo::System,
