@@ -1,6 +1,11 @@
 #include "MyJointControllerPlugin.h"
 
 
+
+//using namespace ignition;
+//using namespace gazebo;
+//using namespace systems;
+
 //https://gist.github.com/nullpo24/146f253f0d789cb10c680786e7582940
 MyJointControllerPlugin::MyJointControllerPlugin()
     : dataPtr(std::make_unique<MyJointControllerPluginPrivate>())
@@ -172,7 +177,131 @@ void MyJointControllerPlugin::Configure(const ignition::gazebo::Entity &_entity,
 void MyJointControllerPlugin::PreUpdate(const ignition::gazebo::UpdateInfo &_info,
                          ignition::gazebo::EntityComponentManager &_ecm)
 {
-      
+    IGN_PROFILE("DiffDrive::PreUpdate");
+
+    // \TODO(anyone) Support rewind
+    if (_info.dt < std::chrono::steady_clock::duration::zero())
+    {
+        ignwarn << "Detected jump back in time ["
+            << std::chrono::duration_cast<std::chrono::seconds>(_info.dt).count()
+            << "s]. System may not work properly." << std::endl;
+    }
+
+    // If the joints haven't been identified yet, look for them
+    static std::set<std::string> warnedModels;
+    auto modelName = this->dataPtr->model.Name(_ecm);
+    if (this->dataPtr->leftJoints.empty() ||
+        this->dataPtr->rightJoints.empty() ||
+        this->dataPtr->models.empty())
+    {
+        bool warned{false};
+        for (const std::string &name : this->dataPtr->leftJointNames)
+        {
+            ignition::gazebo::Entity joint = this->dataPtr->model.JointByName(_ecm, name);
+            if (joint != ignition::gazebo::kNullEntity)
+                this->dataPtr->leftJoints.push_back(joint);
+            else if (warnedModels.find(modelName) == warnedModels.end())
+            {
+                ignwarn << "Failed to find left joint [" << name << "] for model ["
+                        << modelName << "]" << std::endl;
+                warned = true;
+            }
+        }
+        
+        for (const std::string &name : this->dataPtr->rightJointNames)
+        {
+            ignition::gazebo::Entity joint = this->dataPtr->model.JointByName(_ecm, name);
+            if (joint != ignition::gazebo::kNullEntity)
+                this->dataPtr->rightJoints.push_back(joint);
+            else if (warnedModels.find(modelName) == warnedModels.end())
+            {
+                ignwarn << "Failed to find right joint [" << name << "] for model ["
+                        << modelName << "]" << std::endl;
+                warned = true;
+            }
+        }
+        for (const std::string &name : this->dataPtr->modelNames)
+        {
+            ignition::gazebo::Entity joint = this->dataPtr->model.JointByName(_ecm, name);
+            if (joint != ignition::gazebo::kNullEntity)
+                this->dataPtr->models.push_back(joint);
+        }
+
+        if (warned)
+        {
+            warnedModels.insert(modelName);
+        }
+
+    }
+    
+    if (this->dataPtr->leftJoints.empty() || this->dataPtr->rightJoints.empty())
+        return;
+
+
+    if (warnedModels.find(modelName) != warnedModels.end())
+    {
+        ignmsg << "Found joints for model [" << modelName
+            << "], plugin will start working." << std::endl;
+        warnedModels.erase(modelName);
+    }
+
+
+    // Nothing left to do if paused.
+    if (_info.paused)
+        return;
+
+    for (ignition::gazebo::Entity joint : this->dataPtr->leftJoints)
+    {
+        // Update wheel velocity
+        auto vel = _ecm.Component<ignition::gazebo::components::JointVelocityCmd>(joint);
+
+        if (vel == nullptr)
+        {
+        _ecm.CreateComponent(
+            joint, ignition::gazebo::components::JointVelocityCmd({this->dataPtr->leftJointSpeed}));
+        }
+        else
+        {
+        *vel = ignition::gazebo::components::JointVelocityCmd({this->dataPtr->leftJointSpeed});
+        }
+    }
+
+    for (ignition::gazebo::Entity joint : this->dataPtr->rightJoints)
+    {
+        // Update wheel velocity
+        auto vel = _ecm.Component<ignition::gazebo::components::JointVelocityCmd>(joint);
+
+        if (vel == nullptr)
+        {
+        _ecm.CreateComponent(joint,
+            ignition::gazebo::components::JointVelocityCmd({this->dataPtr->rightJointSpeed}));
+        }
+        else
+        {
+        *vel = ignition::gazebo::components::JointVelocityCmd({this->dataPtr->rightJointSpeed});
+        }
+    }
+
+    // Create the left and right side joint position components if they
+    // don't exist.
+    auto leftPos = _ecm.Component<ignition::gazebo::components::JointPosition>(
+        this->dataPtr->leftJoints[0]);
+    if (!leftPos)
+    {
+        _ecm.CreateComponent(this->dataPtr->leftJoints[0],
+            ignition::gazebo::components::JointPosition());
+    }
+
+    auto rightPos = _ecm.Component<ignition::gazebo::components::JointPosition>(
+        this->dataPtr->rightJoints[0]);
+    if (!rightPos)
+    {
+        _ecm.CreateComponent(this->dataPtr->rightJoints[0],
+            ignition::gazebo::components::JointPosition());
+    }
+
+    auto pose = ignition::gazebo::convert<ignition::math::Pose3d>(this->dataPtr->targetPose);
+    this->dataPtr->model.SetWorldPoseCmd(_ecm, pose);
 }
 
 
@@ -184,6 +313,9 @@ void MyJointControllerPlugin::Update(const ignition::gazebo::UpdateInfo &_info,
     
 
 }
+
+
+
 
 void MyJointControllerPluginPrivate::OnCmdVel(const ignition::msgs::Twist &_msg)
 {
