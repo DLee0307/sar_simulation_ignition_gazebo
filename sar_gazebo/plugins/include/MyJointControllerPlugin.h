@@ -68,7 +68,8 @@ class MyJointControllerPluginPrivate;
 class MyJointControllerPlugin : public ignition::gazebo::System,
                                 public ignition::gazebo::ISystemConfigure,
                                 public ignition::gazebo::ISystemPreUpdate,
-                                public ignition::gazebo::ISystemUpdate
+                                public ignition::gazebo::ISystemUpdate,
+                                public ignition::gazebo::ISystemPostUpdate
 {
 public:
     // Constructor
@@ -91,7 +92,10 @@ public:
     // Update method
     void Update(const ignition::gazebo::UpdateInfo &_info, 
                 ignition::gazebo::EntityComponentManager &_ecm) override;
-                
+
+    // PostUpdate method
+    void PostUpdate(const ignition::gazebo::UpdateInfo &_info, 
+                const ignition::gazebo::EntityComponentManager &_ecm) override;
 
     
 

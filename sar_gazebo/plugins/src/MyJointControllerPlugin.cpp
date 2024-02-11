@@ -308,14 +308,20 @@ void MyJointControllerPlugin::PreUpdate(const ignition::gazebo::UpdateInfo &_inf
 void MyJointControllerPlugin::Update(const ignition::gazebo::UpdateInfo &_info, 
                         ignition::gazebo::EntityComponentManager &_ecm)
 {
-    
-    
-    
-
 }
 
+void MyJointControllerPlugin::PostUpdate(const ignition::gazebo::UpdateInfo &_info, 
+                                        const ignition::gazebo::EntityComponentManager &_ecm)
+{
+    IGN_PROFILE("DiffDrive::PostUpdate");
+    // Nothing left to do if paused.
+    if (_info.paused)
+        return;
 
-
+    this->dataPtr->UpdateVelocity(_info, _ecm);
+    this->dataPtr->UpdateOdometry(_info, _ecm);
+    this->dataPtr->UpdatePose(_info, _ecm);  
+}
 
 void MyJointControllerPluginPrivate::OnCmdVel(const ignition::msgs::Twist &_msg)
 {
@@ -334,6 +340,7 @@ IGNITION_ADD_PLUGIN(MyJointControllerPlugin,
                     ignition::gazebo::System,
                     ignition::gazebo::ISystemConfigure,
                     ignition::gazebo::ISystemPreUpdate,
-                    ignition::gazebo::ISystemUpdate)
+                    ignition::gazebo::ISystemUpdate,
+                    ignition::gazebo::ISystemPostUpdate)
                     
 IGNITION_ADD_PLUGIN_ALIAS(MyJointControllerPlugin, "my_namespace::MyJointControllerPlugin")
