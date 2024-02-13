@@ -214,14 +214,21 @@ https://gazebosim.org/api/gazebo/4.2/migrationplugins.html
                 </axis>
             </joint>
 
-            <!-- Plugin for joint control-->
-            <plugin filename="/home/dlee/ros2_ws/install/sar_gazebo/lib/libMyJointControllerPlugin.so" name="MyJointControllerPlugin">
+            <!-- Plugin for joint control
+            <plugin filename="/home/dlee/ros2_ws/install/sar_gazebo/lib/libJointController.so" name="ignition::gazebo::systems::JointController">
                 <model>two_link_robot</model>
                 <joint>joint1"</joint>
                 <odom_publish_frequency>1</odom_publish_frequency>
                 <topic>cmd_vel</topic>
-            </plugin>
+            </plugin>-->
             
+            <plugin filename="/home/dlee/ros2_ws/install/sar_gazebo/lib/libJointController.so"
+            name="ignition::gazebo::systems::JointController">
+                <joint_name>joint1</joint_name>
+                <initial_velocity>5.0</initial_velocity>
+                <use_force_commands>false</use_force_commands>
+            </plugin>
+
             <!--<plugin filename="libignition-gazebo-joint-controller-system"
             name="gz::sim::systems::JointController">
                 <joint_name>joint1</joint_name>
