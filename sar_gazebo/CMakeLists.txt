@@ -97,6 +97,19 @@ install(TARGETS DiffDrive
         RUNTIME DESTINATION bin)
 
 
+add_library(JointController SHARED plugins/src/JointController.cc)
+ament_target_dependencies(JointController rclcpp)
+target_link_libraries(JointController 
+  ignition-gazebo3::ignition-gazebo3
+  ignition-physics3::ignition-physics3
+  ignition-math6::ignition-math6
+)
+
+install(TARGETS JointController
+        ARCHIVE DESTINATION lib
+        LIBRARY DESTINATION lib
+        RUNTIME DESTINATION bin)
+
 #install(DIRECTORY include/
 #  DESTINATION include)
 

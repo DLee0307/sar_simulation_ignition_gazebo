@@ -50,13 +50,12 @@ void MyJointControllerPlugin::Configure(const ignition::gazebo::Entity &_entity,
         sdfElem = sdfElem->GetNextElement("right_joint");
     }
 
-    //can be problem in this part
+    //DH:: can be problem in this part
     sdfElem = ptr->GetElement("model");
     while (sdfElem)
     {
         this->dataPtr->modelNames.push_back(sdfElem->Get<std::string>());
         sdfElem = sdfElem->GetNextElement("model");
-        std::cout << "\t Link Entity Name:!!!\t" << ptr << std::endl;
     }
 
     this->dataPtr->wheelSeparation = _sdf->Get<double>("wheel_separation",
@@ -106,27 +105,14 @@ void MyJointControllerPlugin::Configure(const ignition::gazebo::Entity &_entity,
         hasJerkLimits = true;
     }
     
-    ignition::math::SpeedLimiter speedLimiter;
-    if (hasVelocityLimits) {
-        speedLimiter.SetMinVelocity(minVel);
-        speedLimiter.SetMaxVelocity(maxVel);
-    }
-    if (hasAccelerationLimits) {
-        speedLimiter.SetMinAcceleration(minAccel);
-        speedLimiter.SetMaxAcceleration(maxAccel);
-    }
-    if (hasJerkLimits) {
-        speedLimiter.SetMinJerk(minJerk);
-        speedLimiter.SetMaxJerk(maxJerk);
-    }
-    
-    this->dataPtr->limiterLin = std::make_unique<ignition::gazebo::systems::SpeedLimiter>(
+    // Instantiate the speed limiters.
+    /*this->dataPtr->limiterLin = std::make_unique<ignition::gazebo::systems::SpeedLimiter>(
         hasVelocityLimits, hasAccelerationLimits, hasJerkLimits,
         minVel, maxVel, minAccel, maxAccel, minJerk, maxJerk);
     
     this->dataPtr->limiterAng = std::make_unique<ignition::gazebo::systems::SpeedLimiter>(
         hasVelocityLimits, hasAccelerationLimits, hasJerkLimits,
-        minVel, maxVel, minAccel, maxAccel, minJerk, maxJerk);
+        minVel, maxVel, minAccel, maxAccel, minJerk, maxJerk);*/
     
     double odomFreq = _sdf->Get<double>("odom_publish_frequency", 50).first;
     if (odomFreq > 0)
@@ -434,8 +420,8 @@ void MyJointControllerPluginPrivate::UpdateVelocity(const ignition::gazebo::Upda
     const double dt = std::chrono::duration<double>(_info.dt).count();
 
     // Limit the target velocity if needed.
-    this->limiterLin->Limit(linVel, this->last0Cmd.lin, this->last1Cmd.lin, dt);
-    this->limiterAng->Limit(angVel, this->last0Cmd.ang, this->last1Cmd.ang, dt);
+    //this->limiterLin->Limit(linVel, this->last0Cmd.lin, this->last1Cmd.lin, dt);
+    //this->limiterAng->Limit(angVel, this->last0Cmd.ang, this->last1Cmd.ang, dt);
 
     // Update history of commands.
     this->last1Cmd = last0Cmd;

@@ -858,14 +858,39 @@ https://gazebosim.org/api/gazebo/4.2/migrationplugins.html
             <plugin filename="/home/dlee/ros2_ws/install/sar_gazebo/lib/libMotor_Plugin.so" name="Motor_Plugin">
             </plugin>-->
 
-            <plugin filename="/home/dlee/ros2_ws/install/sar_gazebo/lib/libMotor_Plugin.so" name="Motor_Plugin">
+            <!--<plugin filename="/home/dlee/ros2_ws/install/sar_gazebo/lib/libMotor_Plugin.so" name="Motor_Plugin">
             <Motor_Number>1</Motor_Number>
             <Joint_Name>Prop_1_Joint</Joint_Name>
             <Link_Name>Prop_1</Link_Name>
             <Turning_Direction>ccw</Turning_Direction>
             <Visual_Slowdown>100</Visual_Slowdown>
-            </plugin>
+            </plugin>-->
+            
 
+            <!--https://github.com/gazebosim/gz-sim/issues/1019
+            https://app.codecov.io/gh/gazebosim/gz-sim/pull/1953/blob/src/systems/joint_controller/JointController.cc-->
+            
+            <plugin filename="libignition-gazebo-joint-controller-system"
+            name="ignition::gazebo::systems::JointController">
+                <joint_name>Prop_1_Joint</joint_name>
+                <initial_velocity>50.0</initial_velocity>
+                <topic>cmd_vel</topic>
+            </plugin>
+            <plugin filename="libignition-gazebo-joint-controller-system"
+            name="ignition::gazebo::systems::JointController">
+                <joint_name>Prop_2_Joint</joint_name>
+                <initial_velocity>50.0</initial_velocity>
+            </plugin>            
+            <plugin filename="libignition-gazebo-joint-controller-system"
+            name="ignition::gazebo::systems::JointController">
+                <joint_name>Prop_3_Joint</joint_name>
+                <initial_velocity>50.0</initial_velocity>
+            </plugin>            
+            <plugin filename="libignition-gazebo-joint-controller-system"
+            name="ignition::gazebo::systems::JointController">
+                <joint_name>Prop_4_Joint</joint_name>
+                <initial_velocity>50.0</initial_velocity>
+            </plugin>
             <!--
             <plugin name='Motor_2_Plugin' filename='libMotor_Plugin.so'>
             <Motor_Number>2</Motor_Number>

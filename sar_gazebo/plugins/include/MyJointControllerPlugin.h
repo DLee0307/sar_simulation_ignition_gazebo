@@ -61,8 +61,10 @@ struct Commands
   double lin;
   /// \brief Angular velocity.
   double ang;
+
   Commands() : lin(0.0), ang(0.0) {}
 };
+
 class MyJointControllerPluginPrivate; 
 
 class MyJointControllerPlugin : public ignition::gazebo::System,
@@ -107,6 +109,7 @@ private:
 class MyJointControllerPluginPrivate {
 public: 
     void OnCmdVel(const ignition::msgs::Twist &_msg);
+    
     void OnCmdPose(const ignition::msgs::Pose &_msg);
     void UpdateOdometry(const ignition::gazebo::UpdateInfo &_info, const ignition::gazebo::EntityComponentManager &_ecm);
     void UpdateVelocity(const ignition::gazebo::UpdateInfo &_info,
@@ -117,14 +120,15 @@ public:
     ignition::transport::Node node;
 
 
-    std::vector<ignition::gazebo::Entity> leftJoints;
-    std::vector<ignition::gazebo::Entity> rightJoints;
+    std::vector<ignition::gazebo::Entity> Joints;
     std::vector<ignition::gazebo::Entity> models;
     std::vector<std::string> modelNames;
-    std::vector<std::string> leftJointNames;
-    std::vector<std::string> rightJointNames;
-    double leftJointSpeed{0};
-    double rightJointSpeed{0};
+    std::vector<std::string> JointNames;
+    double JointSpeed{0};
+
+
+
+
     ignition::math::Pose3d modelPose;
     double wheelSeparation{1.0};
     double wheelRadius{0.2};
