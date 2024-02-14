@@ -110,6 +110,20 @@ install(TARGETS JointController
         LIBRARY DESTINATION lib
         RUNTIME DESTINATION bin)
 
+
+add_library(JointController1 SHARED plugins/src/JointController1.cc)
+ament_target_dependencies(JointController1 rclcpp)
+target_link_libraries(JointController1 
+  ignition-gazebo3::ignition-gazebo3
+  ignition-physics3::ignition-physics3
+  ignition-math6::ignition-math6
+)
+
+install(TARGETS JointController1
+        ARCHIVE DESTINATION lib
+        LIBRARY DESTINATION lib
+        RUNTIME DESTINATION bin)
+
 #install(DIRECTORY include/
 #  DESTINATION include)
 
