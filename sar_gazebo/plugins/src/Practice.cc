@@ -1,4 +1,4 @@
-#include "JointController1.hh"
+#include "Practice.hh"
 #include <iostream>
 #include <ignition/plugin/Register.hh>
 
@@ -10,7 +10,6 @@
 
 #include <ignition/common/Profiler.hh>
 #include <ignition/math/PID.hh>
-#include <ignition/plugin/Register.hh>
 #include <ignition/transport/Node.hh>
 
 #include "ignition/gazebo/components/Actuators.hh"
@@ -99,6 +98,7 @@ void JointController::Configure(const ignition::gazebo::Entity &_entity,
     }
     sdfElem = sdfElem->GetNextElement("joint_name");
   }
+
   if (this->dataPtr->jointNames.empty())
   {
     ignerr << "Failed to get any <joint_name>." << std::endl;
@@ -162,6 +162,7 @@ void JointController::Configure(const ignition::gazebo::Entity &_entity,
   }
 
   // Subscribe to commands
+  // When sub topic x topic x Actuator x
   std::string topic;
   if ((!_sdf->HasElement("sub_topic")) && (!_sdf->HasElement("topic"))
     && (!this->dataPtr->useActuatorMsg))
@@ -169,6 +170,7 @@ void JointController::Configure(const ignition::gazebo::Entity &_entity,
     topic = transport::TopicUtils::AsValidTopic("/model/" +
         this->dataPtr->model.Name(_ecm) + "/joint/" +
         this->dataPtr->jointNames[0] + "/cmd_vel");
+
     if (topic.empty())
     {
       ignerr << "Failed to create topic for joint ["
@@ -177,7 +179,7 @@ void JointController::Configure(const ignition::gazebo::Entity &_entity,
       return;
     }
   }
-
+  // When subtopic x topic x Actuator o
   if ((!_sdf->HasElement("sub_topic")) && (!_sdf->HasElement("topic"))
     && (this->dataPtr->useActuatorMsg))
   {
@@ -254,6 +256,7 @@ void JointController::PreUpdate(const ignition::gazebo::UpdateInfo &_info,
         << std::chrono::duration_cast<std::chrono::seconds>(_info.dt).count()
         << "s]. System may not work properly." << std::endl;
   }
+
   // If the joints haven't been identified yet, look for them
   if (this->dataPtr->jointEntities.empty())
   {
@@ -272,6 +275,7 @@ void JointController::PreUpdate(const ignition::gazebo::UpdateInfo &_info,
       }
     }
   }
+
   if (this->dataPtr->jointEntities.empty())
     return;
 
@@ -287,7 +291,6 @@ void JointController::PreUpdate(const ignition::gazebo::UpdateInfo &_info,
     _ecm.CreateComponent(this->dataPtr->jointEntities[0],
         components::JointVelocity());
   }
-
 
   // We just created the joint velocity component, give one iteration for the
   // physics system to update its size

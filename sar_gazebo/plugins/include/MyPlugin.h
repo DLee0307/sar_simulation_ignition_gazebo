@@ -28,7 +28,7 @@ public:
     void PreUpdate(const ignition::gazebo::UpdateInfo &_info,
                    ignition::gazebo::EntityComponentManager &_ecm) override;
 private:
-    bool messagePrinted = false;
+
 };
 
 #endif  // MY_PLUGIN_H

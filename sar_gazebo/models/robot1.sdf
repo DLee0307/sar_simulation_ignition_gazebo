@@ -222,11 +222,16 @@ https://gazebosim.org/api/gazebo/4.2/migrationplugins.html
                 <topic>cmd_vel</topic>
             </plugin>-->
             
-            <plugin filename="/home/dlee/ros2_ws/install/sar_gazebo/lib/libJointController.so"
-            name="ignition::gazebo::systems::JointController">
+            <plugin filename="/home/dlee/ros2_ws/install/sar_gazebo/lib/libMotor_Plugin.so"
+            name="ignition::gazebo::systems::Motor_Plugin">
                 <joint_name>joint1</joint_name>
-                <initial_velocity>5.0</initial_velocity>
+                <link_name>link1</link_name>
+                <Turning_Direction>cw</Turning_Direction>
+                <Visual_Slowdown>100</Visual_Slowdown>
+                <initial_velocity>1.0</initial_velocity>
                 <use_force_commands>false</use_force_commands>
+                <!--<p_gain>10.0</p_gain>-->
+                <topic>cmd_vel</topic>
             </plugin>
 
             <!--<plugin filename="libignition-gazebo-joint-controller-system"
