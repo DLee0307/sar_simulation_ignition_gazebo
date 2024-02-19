@@ -78,6 +78,12 @@ class ignition::gazebo::systems::Motor_PluginPrivate
 
 
 
+
+
+
+
+
+
 };
 
 Motor_Plugin::Motor_Plugin()
