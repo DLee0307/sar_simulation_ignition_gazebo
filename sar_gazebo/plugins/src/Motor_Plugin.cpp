@@ -40,7 +40,7 @@ class ignition::gazebo::systems::Motor_PluginPrivate
   public: double Prev_Thrust = 0.0;  
 
   // CACULATED VALUES
-  public: double Thrust=0.0001;              // Calculated Thrust [N]
+  public: double Thrust=0.1;              // Calculated Thrust [N]
   public: double Torque;              // Calculated Torque [N*m]
   //public: double Rot_Vel = 0.0f;      // Rotational Velocity [rad/s]
   //public: double Rot_Vel_Slowdown;    // Slowed-down Rotational Velocity [rad/s]
@@ -60,15 +60,6 @@ class ignition::gazebo::systems::Motor_PluginPrivate
 
   public: void UpdateForcesAndMoments();
 
-
-  /// \brief Callback for velocity subscription
-  /// \param[in] _msg Velocity message
-  public: void OnCmdVel(const msgs::Double &_msg);
-
-  /// \brief Callback for actuator velocity subscription
-  /// \param[in] _msg Velocity message
-  public: void OnActuatorVel(const msgs::Actuators &_msg);
-
   /// \brief Gazebo communication node.
   public: transport::Node node;
 
@@ -78,25 +69,14 @@ class ignition::gazebo::systems::Motor_PluginPrivate
 
   /// \brief Commanded joint velocity
   public: double jointVelCmd{0.0};
+  public: double JointForceCmd{0.0};
 
-  /// \brief Index of velocity actuator.
-  public: int actuatorNumber = 0;
+
 
   /// \brief mutex to protect jointVelCmd
   public: std::mutex jointVelCmdMutex;
 
-  /// \brief Model interface
 
-
-  /// \brief True if using Actuator msg to control joint velocity.
-  public: bool useActuatorMsg{false};
-
-  /// \brief True if force commands are internally used to keep the target
-  /// velocity.
-  public: bool useForceCommands{false};
-
-  /// \brief Velocity PID controller.
-  public: math::PID velPid;
 
 };
 
@@ -385,8 +365,6 @@ void Motor_Plugin::PreUpdate(const ignition::gazebo::UpdateInfo &_info,
   this->Rot_Vel = sqrt(dataPtr->Thrust/Thrust_Coeff); 
   this->dataPtr->jointVelCmd = Turn_Direction * Rot_Vel / Rot_Vel_Slowdown;
 
-  
-  //std::cout << " 1 " << this->dataPtr->Sampling_time  << std::endl;
 
 
 }
@@ -440,7 +418,6 @@ void Motor_PluginPrivate::UpdateForcesAndMoments()
     Thrust_msg.MotorThrust_actual = Thrust;
     MS_Data_Pub.publish(Thrust_msg);
     */
-
 
 }
 

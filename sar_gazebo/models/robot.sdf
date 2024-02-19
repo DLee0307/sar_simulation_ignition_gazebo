@@ -2,9 +2,9 @@
 <sdf version="1.7">
 
 <!--
-1. How can I get pose information using CAD?
-2. using namespace?
-3. declare private and public?
+1. How can I get pose information? Can I get this information using CAD program??(line 957)
+2. Is there any disadvantage when I use namespace??
+3. 
     -->
 
 <!--

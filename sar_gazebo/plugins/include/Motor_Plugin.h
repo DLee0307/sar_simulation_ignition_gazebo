@@ -44,7 +44,7 @@
 #include <ignition/gazebo/Export.hh>
 #include <ignition/gazebo/components/JointPosition.hh>
 #include <ignition/gazebo/Link.hh>
-
+#include <ignition/gazebo/components/JointForceCmd.hh>
 #define g2Newton (9.81f/1000.0f)
 #define Newton2g (1000.0f/9.81f)
 
