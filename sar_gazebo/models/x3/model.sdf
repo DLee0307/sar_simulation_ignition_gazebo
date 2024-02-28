@@ -1,0 +1,418 @@
+<?xml version="1.0" ?>
+<sdf version="1.7">
+
+
+    <world name="sar_world3">
+        <physics name="1ms" type="ignored">
+            <max_step_size>0.001</max_step_size>
+            <real_time_factor>1.0</real_time_factor>
+        </physics>
+        <plugin
+            filename="ignition-gazebo-physics-system"
+            name="ignition::gazebo::systems::Physics">
+        </plugin>
+        <plugin
+            filename="ignition-gazebo-user-commands-system"
+            name="ignition::gazebo::systems::UserCommands">
+        </plugin>
+        <plugin
+            filename="ignition-gazebo-scene-broadcaster-system"
+            name="ignition::gazebo::systems::SceneBroadcaster">
+        </plugin>
+            
+        <!-- 
+        <plugin filename="/home/dlee/ros2_ws/install/sar_gazebo/lib/libMyStstemPlugin.so" name="MySystemPlugin">
+        </plugin>-->
+
+
+        <!-- Other world elements -->
+        <gui fullscreen="0">
+
+            <!-- 3D scene -->
+            <plugin filename="GzScene3D" name="3D View">
+                <ignition-gui>
+                <title>3D View</title>
+                <property type="bool" key="showTitleBar">false</property>
+                <property type="string" key="state">docked</property>
+                </ignition-gui>
+
+                <engine>ogre2</engine>
+                <scene>scene</scene>
+                <ambient_light>0.4 0.4 0.4</ambient_light>
+                <background_color>0.8 0.8 0.8</background_color>
+            </plugin>
+
+            <!-- World control -->
+            <plugin filename="WorldControl" name="World control">
+                <ignition-gui>
+                <title>World control</title>
+                <property type="bool" key="showTitleBar">false</property>
+                <property type="bool" key="resizable">false</property>
+                <property type="double" key="height">72</property>
+                <property type="double" key="width">121</property>
+                <property type="double" key="z">1</property>
+
+                <property type="string" key="state">floating</property>
+                <anchors target="3D View">
+                    <line own="left" target="left"/>
+                    <line own="bottom" target="bottom"/>
+                </anchors>
+                </ignition-gui>
+
+                <play_pause>true</play_pause>
+                <step>true</step>
+                <start_paused>true</start_paused>
+                <service>/world/car_world/control</service>
+                <stats_topic>/world/car_world/stats</stats_topic>
+            </plugin>
+
+
+
+            <!-- World statistics -->
+            <plugin filename="WorldStats" name="World stats">
+                <ignition-gui>
+                <title>World stats</title>
+                <property type="bool" key="showTitleBar">false</property>
+                <property type="bool" key="resizable">false</property>
+                <property type="double" key="height">110</property>
+                <property type="double" key="width">290</property>
+                <property type="double" key="z">1</property>
+
+                <property type="string" key="state">floating</property>
+                <anchors target="3D View">
+                    <line own="right" target="right"/>
+                    <line own="bottom" target="bottom"/>
+                </anchors>
+                </ignition-gui>
+
+                <sim_time>true</sim_time>
+                <real_time>true</real_time>
+                <real_time_factor>true</real_time_factor>
+                <iterations>true</iterations>
+                <topic>/world/car_world/stats</topic>
+
+            </plugin>
+
+            <!-- Entity tree -->
+            <plugin filename="EntityTree" name="Entity tree">
+            </plugin>
+
+        </gui>
+
+        <light type="directional" name="sun">
+            <cast_shadows>true</cast_shadows>
+            <pose>0 0 10 0 0 0</pose>
+            <diffuse>0.8 0.8 0.8 1</diffuse>
+            <specular>0.2 0.2 0.2 1</specular>
+            <attenuation>
+                <range>1000</range>
+                <constant>0.9</constant>
+                <linear>0.01</linear>
+                <quadratic>0.001</quadratic>
+            </attenuation>
+            <direction>-0.5 0.1 -0.9</direction>
+        </light>
+
+        <model name='x3'>
+          <pose>0 0 0.053302 0 0 0</pose>
+          <link name='X3/base_link'>
+            <pose frame=''>0 0 0 0 -0 0</pose>
+            <inertial>
+              <pose frame=''>0 0 0 0 -0 0</pose>
+              <mass>1.5</mass>
+              <inertia>
+                <ixx>0.0347563</ixx>
+                <ixy>0</ixy>
+                <ixz>0</ixz>
+                <iyy>0.07</iyy>
+                <iyz>0</iyz>
+                <izz>0.0977</izz>
+              </inertia>
+            </inertial>
+            <collision name='X3/base_link_inertia_collision'>
+              <pose frame=''>0 0 0 0 -0 0</pose>
+              <geometry>
+                <box>
+                  <size>0.47 0.47 0.11</size>
+                </box>
+              </geometry>
+            </collision>
+            <visual name='X3/base_link_inertia_visual'>
+              <pose frame=''>0 0 0 0 -0 0</pose>
+              <geometry>
+                <mesh>
+                  <scale>1 1 1</scale>
+                  <uri>model://x3/meshes/x3.dae</uri>
+                </mesh>
+              </geometry>
+            </visual>
+            <sensor name="imu_sensor" type="imu">
+                <always_on>1</always_on>
+                <update_rate>250</update_rate>
+                <visualize>true</visualize>
+                <topic>imu</topic>
+            </sensor>
+          </link>
+          <link name='X3/rotor_0'>
+            <pose frame=''>0.13 -0.22 0.023 0 -0 0</pose>
+            <inertial>
+              <pose frame=''>0 0 0 0 -0 0</pose>
+              <mass>0.005</mass>
+              <inertia>
+                <ixx>9.75e-07</ixx>
+                <ixy>0</ixy>
+                <ixz>0</ixz>
+                <iyy>4.17041e-05</iyy>
+                <iyz>0</iyz>
+                <izz>4.26041e-05</izz>
+              </inertia>
+            </inertial>
+            <collision name='X3/rotor_0_collision'>
+              <pose frame=''>0 0 0 0 -0 0</pose>
+              <geometry>
+                <cylinder>
+                  <length>0.005</length>
+                  <radius>0.1</radius>
+                </cylinder>
+              </geometry>
+              <surface>
+                <contact>
+                  <ode/>
+                </contact>
+                <friction>
+                  <ode/>
+                </friction>
+              </surface>
+            </collision>
+            <visual name='X3/rotor_0_visual'>
+              <pose frame=''>0 0 0 0 -0 0</pose>
+              <geometry>
+                <mesh>
+                  <scale>0.1 0.1 0.1</scale>
+                  <uri>model://x3/meshes/propeller_ccw.dae</uri>
+                </mesh>
+              </geometry>
+              <material>
+                <script>
+                  <name>Gazebo/Blue</name>
+                  <uri>file://media/materials/scripts/gazebo.material</uri>
+                </script>
+              </material>
+            </visual>
+            <gravity>1</gravity>
+            <velocity_decay/>
+          </link>
+          <joint name='X3/rotor_0_joint' type='revolute'>
+            <child>X3/rotor_0</child>
+            <parent>X3/base_link</parent>
+            <axis>
+              <xyz>0 0 1</xyz>
+              <limit>
+                <lower>-1e+16</lower>
+                <upper>1e+16</upper>
+              </limit>
+              <dynamics>
+                <spring_reference>0</spring_reference>
+                <spring_stiffness>0</spring_stiffness>
+              </dynamics>
+              <use_parent_model_frame>1</use_parent_model_frame>
+            </axis>
+          </joint>
+          <link name='X3/rotor_1'>
+            <pose frame=''>-0.13 0.2 0.023 0 -0 0</pose>
+            <inertial>
+              <pose frame=''>0 0 0 0 -0 0</pose>
+              <mass>0.005</mass>
+              <inertia>
+                <ixx>9.75e-07</ixx>
+                <ixy>0</ixy>
+                <ixz>0</ixz>
+                <iyy>4.17041e-05</iyy>
+                <iyz>0</iyz>
+                <izz>4.26041e-05</izz>
+              </inertia>
+            </inertial>
+            <collision name='X3/rotor_1_collision'>
+              <pose frame=''>0 0 0 0 -0 0</pose>
+              <geometry>
+                <cylinder>
+                  <length>0.005</length>
+                  <radius>0.1</radius>
+                </cylinder>
+              </geometry>
+              <surface>
+                <contact>
+                  <ode/>
+                </contact>
+                <friction>
+                  <ode/>
+                </friction>
+              </surface>
+            </collision>
+            <visual name='X3/rotor_1_visual'>
+              <pose frame=''>0 0 0 0 -0 0</pose>
+              <geometry>
+                <mesh>
+                  <scale>0.1 0.1 0.1</scale>
+                  <uri>model://x3/meshes/propeller_ccw.dae</uri>
+                </mesh>
+              </geometry>
+              <material>
+                <script>
+                  <name>Gazebo/Red</name>
+                  <uri>file://media/materials/scripts/gazebo.material</uri>
+                </script>
+              </material>
+            </visual>
+            <gravity>1</gravity>
+            <velocity_decay/>
+          </link>
+          <joint name='X3/rotor_1_joint' type='revolute'>
+            <child>X3/rotor_1</child>
+            <parent>X3/base_link</parent>
+            <axis>
+              <xyz>0 0 1</xyz>
+              <limit>
+                <lower>-1e+16</lower>
+                <upper>1e+16</upper>
+              </limit>
+              <dynamics>
+                <spring_reference>0</spring_reference>
+                <spring_stiffness>0</spring_stiffness>
+              </dynamics>
+              <use_parent_model_frame>1</use_parent_model_frame>
+            </axis>
+          </joint>
+          <link name='X3/rotor_2'>
+            <pose frame=''>0.13 0.22 0.023 0 -0 0</pose>
+            <inertial>
+              <pose frame=''>0 0 0 0 -0 0</pose>
+              <mass>0.005</mass>
+              <inertia>
+                <ixx>9.75e-07</ixx>
+                <ixy>0</ixy>
+                <ixz>0</ixz>
+                <iyy>4.17041e-05</iyy>
+                <iyz>0</iyz>
+                <izz>4.26041e-05</izz>
+              </inertia>
+            </inertial>
+            <collision name='X3/rotor_2_collision'>
+              <pose frame=''>0 0 0 0 -0 0</pose>
+              <geometry>
+                <cylinder>
+                  <length>0.005</length>
+                  <radius>0.1</radius>
+                </cylinder>
+              </geometry>
+              <surface>
+                <contact>
+                  <ode/>
+                </contact>
+                <friction>
+                  <ode/>
+                </friction>
+              </surface>
+            </collision>
+            <visual name='X3/rotor_2_visual'>
+              <pose frame=''>0 0 0 0 -0 0</pose>
+              <geometry>
+                <mesh>
+                  <scale>0.1 0.1 0.1</scale>
+                  <uri>model://x3/meshes/propeller_cw.dae</uri>
+                </mesh>
+              </geometry>
+              <material>
+                <script>
+                  <name>Gazebo/Blue</name>
+                  <uri>file://media/materials/scripts/gazebo.material</uri>
+                </script>
+              </material>
+            </visual>
+            <gravity>1</gravity>
+            <velocity_decay/>
+          </link>
+          <joint name='X3/rotor_2_joint' type='revolute'>
+            <child>X3/rotor_2</child>
+            <parent>X3/base_link</parent>
+            <axis>
+              <xyz>0 0 1</xyz>
+              <limit>
+                <lower>-1e+16</lower>
+                <upper>1e+16</upper>
+              </limit>
+              <dynamics>
+                <spring_reference>0</spring_reference>
+                <spring_stiffness>0</spring_stiffness>
+              </dynamics>
+              <use_parent_model_frame>1</use_parent_model_frame>
+            </axis>
+          </joint>
+          <link name='X3/rotor_3'>
+            <pose frame=''>-0.13 -0.2 0.023 0 -0 0</pose>
+            <inertial>
+              <pose frame=''>0 0 0 0 -0 0</pose>
+              <mass>0.005</mass>
+              <inertia>
+                <ixx>9.75e-07</ixx>
+                <ixy>0</ixy>
+                <ixz>0</ixz>
+                <iyy>4.17041e-05</iyy>
+                <iyz>0</iyz>
+                <izz>4.26041e-05</izz>
+              </inertia>
+            </inertial>
+            <collision name='X3/rotor_3_collision'>
+              <pose frame=''>0 0 0 0 -0 0</pose>
+              <geometry>
+                <cylinder>
+                  <length>0.005</length>
+                  <radius>0.1</radius>
+                </cylinder>
+              </geometry>
+              <surface>
+                <contact>
+                  <ode/>
+                </contact>
+                <friction>
+                  <ode/>
+                </friction>
+              </surface>
+            </collision>
+            <visual name='X3/rotor_3_visual'>
+              <pose frame=''>0 0 0 0 -0 0</pose>
+              <geometry>
+                <mesh>
+                  <scale>0.1 0.1 0.1</scale>
+                  <uri>model://x3/meshes/propeller_cw.dae</uri>
+                </mesh>
+              </geometry>
+              <material>
+                <script>
+                  <name>Gazebo/Red</name>
+                  <uri>file://media/materials/scripts/gazebo.material</uri>
+                </script>
+              </material>
+            </visual>
+            <gravity>1</gravity>
+            <velocity_decay/>
+          </link>
+          <joint name='X3/rotor_3_joint' type='revolute'>
+            <child>X3/rotor_3</child>
+            <parent>X3/base_link</parent>
+            <axis>
+              <xyz>0 0 1</xyz>
+              <limit>
+                <lower>-1e+16</lower>
+                <upper>1e+16</upper>
+              </limit>
+              <dynamics>
+                <spring_reference>0</spring_reference>
+                <spring_stiffness>0</spring_stiffness>
+              </dynamics>
+              <use_parent_model_frame>1</use_parent_model_frame>
+            </axis>
+          </joint>
+        </model>
+    </world>
+</sdf>

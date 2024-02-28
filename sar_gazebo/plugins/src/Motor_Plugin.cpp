@@ -66,7 +66,6 @@ class ignition::gazebo::systems::Motor_PluginPrivate
   /// \brief Joint Entity
   public: std::vector<Entity> jointEntities;
 
-
   /// \brief Commanded joint velocity
   public: double jointVelCmd{0.0};
   public: double JointForceCmd{0.0};
@@ -372,7 +371,6 @@ void Motor_Plugin::PreUpdate(const ignition::gazebo::UpdateInfo &_info,
   this->dataPtr->jointVelCmd = Turn_Direction * Rot_Vel / Rot_Vel_Slowdown;
 
 
-
 }
 
 void Motor_Plugin::Update(const ignition::gazebo::UpdateInfo &_info,
@@ -403,6 +401,7 @@ void Motor_PluginPrivate::UpdateForcesAndMoments()
     Thrust = alpha_down*Prev_Thrust + (1-alpha_down)*Thrust_input;
   }
 
+  
     /*
     // APPLY ROTOR THRUST TO LINK
     Link_Ptr->AddRelativeForce(ignition::math::Vector3d(0, 0, (Thrust*g2Newton)));
