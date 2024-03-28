@@ -1,5 +1,5 @@
-#ifndef IGNITION_GAZEBO_SYSTEMS_Test_HH_
-#define IGNITION_GAZEBO_SYSTEMS_Test_HH_
+#ifndef IGNITION_GAZEBO_SYSTEMS_Practice_HH_
+#define IGNITION_GAZEBO_SYSTEMS_Practice_HH_
 
 #include <iostream>
 #include <memory>
@@ -57,18 +57,18 @@ inline namespace IGNITION_GAZEBO_VERSION_NAMESPACE {
 namespace systems
 {
   // Forward declaration
-   class TestPrivate;
+   class PracticePrivate;
 
-   class IGNITION_GAZEBO_VISIBLE Test
+   class IGNITION_GAZEBO_VISIBLE Practice
       : public ignition::gazebo::System,
         public ignition::gazebo::ISystemConfigure,
         public ignition::gazebo::ISystemPreUpdate,
         public ignition::gazebo::ISystemUpdate,
         public ignition::gazebo::ISystemPostUpdate
   {
-    public: Test();
+    public: Practice();
 
-    public: ~Test() override = default;
+    public: ~Practice() override = default;
 
     // Documentation inherited
     public: void Configure(const ignition::gazebo::Entity &_entity,
@@ -90,7 +90,7 @@ namespace systems
     public: void PostUpdate(const ignition::gazebo::UpdateInfo &_info,
                 const ignition::gazebo::EntityComponentManager &_ecm) override;
 
-    private: std::unique_ptr<TestPrivate> dataPtr;
+    private: std::unique_ptr<PracticePrivate> dataPtr;
   };
   }
 }

@@ -113,7 +113,7 @@ install(TARGETS JointController
         RUNTIME DESTINATION bin)
 
 
-add_library(Practice SHARED plugins/src/Practice.cc)
+add_library(Practice SHARED plugins/src/Practice.cpp)
 ament_target_dependencies(Practice rclcpp)
 target_link_libraries(Practice 
   ignition-gazebo3::ignition-gazebo3

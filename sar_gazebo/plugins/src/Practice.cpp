@@ -1,4 +1,4 @@
-#include "Test.h"
+#include "Practice.h"
 #include <mutex>
 #include <string>
 #include <ignition/msgs/actuators.pb.h>
@@ -24,17 +24,18 @@
 #include "ignition/gazebo/Model.hh"
 #include "ignition/gazebo/Util.hh"
 
-      /*  
-      Multicopter motor plugin demo
+  /*  
+  Multicopter motor plugin demo
 
-      Send commands to go straight up:
+  Send commands to go straight up:
 
-      ign topic -t /X3/gazebo/command/motor_speed --msgtype ignition.msgs.Actuators -p 'velocity:[700, 700, 700, 700]'
+  ign topic -t /X3/gazebo/command/motor_speed --msgtype ignition.msgs.Actuators -p 'velocity:[700, 700, 700, 700]'
+  ign topic -t /X3/gazebo/command/motor_speed --msgtype ignition.msgs.Actuators -p 'velocity:[110, 110, 110, 110]'
 
-      And to turn off propellers:
+  And to turn off propellers:
 
-      ign topic -t /X3/gazebo/command/motor_speed --msgtype ignition.msgs.Actuators -p 'velocity:[0, 0, 0, 0]'
-      */
+  ign topic -t /X3/gazebo/command/motor_speed --msgtype ignition.msgs.Actuators -p 'velocity:[0, 0, 0, 0]'
+  */
 
 template <typename T>
 class FirstOrderFilter {
@@ -92,7 +93,7 @@ enum class MotorType {
   kForce
 };
 
-class ignition::gazebo::systems::TestPrivate
+class ignition::gazebo::systems::PracticePrivate
 {
   /// \brief Callback for actuator commands.
   public: void OnActuatorMsg(const msgs::Actuators &_msg);
@@ -195,12 +196,12 @@ class ignition::gazebo::systems::TestPrivate
   public: transport::Node node;
 };
 
-Test::Test()
-  : dataPtr(std::make_unique<TestPrivate>())
+Practice::Practice()
+  : dataPtr(std::make_unique<PracticePrivate>())
 {
 }
 
-void Test::Configure(const ignition::gazebo::Entity &_entity,
+void Practice::Configure(const ignition::gazebo::Entity &_entity,
                          const std::shared_ptr<const sdf::Element> &_sdf,
                          ignition::gazebo::EntityComponentManager &_ecm,
                          ignition::gazebo::EventManager &_eventMgr)
@@ -293,16 +294,6 @@ void Test::Configure(const ignition::gazebo::Entity &_entity,
     auto motorType = sdfClone->GetElement("motorType")->Get<std::string>();
     if (motorType == "velocity")
       this->dataPtr->motorType = MotorType::kVelocity;
-    else if (motorType == "position")
-    {
-      this->dataPtr->motorType = MotorType::kPosition;
-      ignerr << "motorType 'position' not supported" << std::endl;
-    }
-    else if (motorType == "force")
-    {
-      this->dataPtr->motorType = MotorType::kForce;
-      ignerr << "motorType 'force' not supported" << std::endl;
-    }
     else
     {
       ignerr << "Please only use 'velocity', 'position' or "
@@ -358,10 +349,10 @@ void Test::Configure(const ignition::gazebo::Entity &_entity,
     igndbg << "Listening to topic: " << topic << std::endl;
   }
   this->dataPtr->node.Subscribe(topic,
-      &TestPrivate::OnActuatorMsg, this->dataPtr.get());
+      &PracticePrivate::OnActuatorMsg, this->dataPtr.get());
 }
 
-void Test::PreUpdate(const ignition::gazebo::UpdateInfo &_info,
+void Practice::PreUpdate(const ignition::gazebo::UpdateInfo &_info,
                          ignition::gazebo::EntityComponentManager &_ecm)
 {
 
@@ -408,6 +399,7 @@ void Test::PreUpdate(const ignition::gazebo::UpdateInfo &_info,
 
   const auto jointVelocity = _ecm.Component<components::JointVelocity>(
       this->dataPtr->jointEntity);
+  
   if (!jointVelocity)
   {
     _ecm.CreateComponent(this->dataPtr->jointEntity,
@@ -426,12 +418,13 @@ void Test::PreUpdate(const ignition::gazebo::UpdateInfo &_info,
         components::JointVelocityCmd({0}));
     doUpdateForcesAndMoments = false;
   }
-
+/* !!!! need to understand
   if (!_ecm.Component<components::WorldPose>(this->dataPtr->linkEntity))
   {
     _ecm.CreateComponent(this->dataPtr->linkEntity, components::WorldPose());
     doUpdateForcesAndMoments = false;
-  }
+  }*/
+
   if (!_ecm.Component<components::WorldLinearVelocity>(
       this->dataPtr->linkEntity))
   {
@@ -461,20 +454,20 @@ void Test::PreUpdate(const ignition::gazebo::UpdateInfo &_info,
 
 }
 
-void Test::Update(const ignition::gazebo::UpdateInfo &_info,
+void Practice::Update(const ignition::gazebo::UpdateInfo &_info,
                          ignition::gazebo::EntityComponentManager &_ecm)
 {
  
 }
 
-void Test::PostUpdate(const ignition::gazebo::UpdateInfo &_info,
+void Practice::PostUpdate(const ignition::gazebo::UpdateInfo &_info,
                             const ignition::gazebo::EntityComponentManager &_ecm)
 {
 
 }
 
 //////////////////////////////////////////////////
-void TestPrivate::OnActuatorMsg(
+void PracticePrivate::OnActuatorMsg(
     const msgs::Actuators &_msg)
 {
   std::lock_guard<std::mutex> lock(this->recvdActuatorsMsgMutex);
@@ -482,7 +475,7 @@ void TestPrivate::OnActuatorMsg(
 }
 
 //////////////////////////////////////////////////
-void TestPrivate::UpdateForcesAndMoments(
+void PracticePrivate::UpdateForcesAndMoments(
     EntityComponentManager &_ecm)
 {
   IGN_PROFILE("MulticopterMotorModelPrivate::UpdateForcesAndMoments");
@@ -530,160 +523,144 @@ void TestPrivate::UpdateForcesAndMoments(
     }
   }
 
-  switch (this->motorType)
+  const auto jointVelocity = _ecm.Component<components::JointVelocity>(
+      this->jointEntity);
+  double motorRotVel = jointVelocity->Data()[0];
+  if (motorRotVel / (2 * IGN_PI) > 1 / (2 * this->samplingTime))
   {
-    case (MotorType::kPosition):
-    {
-      // double err = joint_->GetAngle(0).Radian() - this->refMotorInput;
-      // double force = pids_.Update(err, this->samplingTime);
-      // joint_->SetForce(0, force);
-      break;
-    }
-    case (MotorType::kForce):
-    {
-      // joint_->SetForce(0, this->refMotorInput);
-      break;
-    }
-    default:  // MotorType::kVelocity
-    {
-      const auto jointVelocity = _ecm.Component<components::JointVelocity>(
-          this->jointEntity);
-      double motorRotVel = jointVelocity->Data()[0];
-      if (motorRotVel / (2 * IGN_PI) > 1 / (2 * this->samplingTime))
-      {
-        ignerr << "Aliasing on motor [" << this->actuatorNumber
-              << "] might occur. Consider making smaller simulation time "
-                 "steps or raising the rotorVelocitySlowdownSim param.\n";
-      }
-      double realMotorVelocity =
-          motorRotVel * this->rotorVelocitySlowdownSim;
-      // Get the direction of the rotor rotation.
-      int realMotorVelocitySign =
-          (realMotorVelocity > 0) - (realMotorVelocity < 0);
-      // Assuming symmetric propellers (or rotors) for the thrust calculation.
-      double thrust = this->turningDirection * realMotorVelocitySign *
-                      realMotorVelocity * realMotorVelocity *
-                      this->motorConstant;
-
-      using Pose = math::Pose3d;
-      using Vector3 = math::Vector3d;
-
-      Link link(this->linkEntity);
-      const auto worldPose = link.WorldPose(_ecm);
-
-      // Apply a force to the link.
-      link.AddWorldForce(_ecm,
-                         worldPose->Rot().RotateVector(Vector3(0, 0, thrust)));
-
-      const auto jointPose = _ecm.Component<components::Pose>(
-          this->jointEntity);
-      if (!jointPose)
-      {
-        ignerr << "joint " << this->jointName << " has no Pose"
-               << "component" << std::endl;
-        return;
-      }
-      // computer joint world pose by multiplying child link WorldPose
-      // with joint Pose
-      Pose jointWorldPose = *worldPose * jointPose->Data();
-
-      const auto jointAxisComp = _ecm.Component<components::JointAxis>(
-          this->jointEntity);
-      if (!jointAxisComp)
-      {
-        ignerr << "joint " << this->jointName << " has no JointAxis"
-               << "component" << std::endl;
-        return;
-      }
-
-      const auto worldLinearVel = link.WorldLinearVelocity(_ecm);
-
-      Entity windEntity = _ecm.EntityByComponents(components::Wind());
-      auto windLinearVel =
-          _ecm.Component<components::WorldLinearVelocity>(windEntity);
-      Vector3 windSpeedWorld = windLinearVel->Data();
-
-      // Forces from Philppe Martin's and Erwan Salaun's
-      // 2010 IEEE Conference on Robotics and Automation paper
-      // The True Role of Accelerometer Feedback in Quadrotor Control
-      // - \omega * \lambda_1 * V_A^{\perp}
-      Vector3 jointAxis =
-          jointWorldPose.Rot().RotateVector(jointAxisComp->Data().Xyz());
-      Vector3 bodyVelocityWorld = *worldLinearVel;
-      Vector3 relativeWindVelocityWorld = bodyVelocityWorld - windSpeedWorld;
-      Vector3 bodyVelocityPerpendicular =
-          relativeWindVelocityWorld -
-          (relativeWindVelocityWorld.Dot(jointAxis) * jointAxis);
-      Vector3 airDrag = -std::abs(realMotorVelocity) *
-                               this->rotorDragCoefficient *
-                               bodyVelocityPerpendicular;
-
-      // Apply air drag to link.
-      link.AddWorldForce(_ecm, airDrag);
-      // Moments get the parent link, such that the resulting torques can be
-      // applied.
-      Vector3 parentWorldTorque;
-      auto parentWrenchComp =
-        _ecm.Component<components::ExternalWorldWrenchCmd>(
-          this->parentLinkEntity);
-      // gazebo_motor_model.cpp subtracts the GetWorldCoGPose() of the
-      // child link from the parent but only uses the rotation component.
-      // Since GetWorldCoGPose() uses the link frame orientation, it
-      // is equivalent to use WorldPose().Rot().
-      Link parentLink(this->parentLinkEntity);
-      const auto parentWorldPose = parentLink.WorldPose(_ecm);
-      // The transformation from the parent_link to the link_.
-      // Pose poseDifference =
-      //  parent_links.at(0)->GetWorldCoGPose().Inverse()
-      //  * link_->GetWorldCoGPose()
-      Pose poseDifference = (*parentWorldPose).Inverse() * (*worldPose);
-      Vector3 dragTorque(
-          0, 0, -this->turningDirection * thrust * this->momentConstant);
-      // Transforming the drag torque into the parent frame to handle
-      // arbitrary rotor orientations.
-      Vector3 dragTorqueParentFrame =
-          poseDifference.Rot().RotateVector(dragTorque);
-      parentWorldTorque =
-          parentWorldPose->Rot().RotateVector(dragTorqueParentFrame);
-
-      Vector3 rollingMoment;
-      // - \omega * \mu_1 * V_A^{\perp}
-      rollingMoment = -std::abs(realMotorVelocity) *
-                       this->rollingMomentCoefficient *
-                       bodyVelocityPerpendicular;
-      parentWorldTorque += rollingMoment;
-      if (!parentWrenchComp)
-      {
-        components::ExternalWorldWrenchCmd wrench;
-        msgs::Set(wrench.Data().mutable_torque(), parentWorldTorque);
-        _ecm.CreateComponent(this->parentLinkEntity, wrench);
-      }
-      else
-      {
-        msgs::Set(parentWrenchComp->Data().mutable_torque(),
-          msgs::Convert(parentWrenchComp->Data().torque()) + parentWorldTorque);
-      }
-      // Apply the filter on the motor's velocity.
-      double refMotorRotVel;
-      refMotorRotVel = this->rotorVelocityFilter->UpdateFilter(
-          this->refMotorInput, this->samplingTime);
-
-      const auto jointVelCmd = _ecm.Component<components::JointVelocityCmd>(
-          this->jointEntity);
-      *jointVelCmd = components::JointVelocityCmd(
-          {this->turningDirection * refMotorRotVel
-                              / this->rotorVelocitySlowdownSim});
-    }
+    ignerr << "Aliasing on motor [" << this->actuatorNumber
+          << "] might occur. Consider making smaller simulation time "
+              "steps or raising the rotorVelocitySlowdownSim param.\n";
   }
+  double realMotorVelocity =
+      motorRotVel * this->rotorVelocitySlowdownSim;
+  // Get the direction of the rotor rotation.
+  int realMotorVelocitySign =
+      (realMotorVelocity > 0) - (realMotorVelocity < 0);
+  // Assuming symmetric propellers (or rotors) for the thrust calculation.
+  double thrust = this->turningDirection * realMotorVelocitySign *
+                  realMotorVelocity * realMotorVelocity *
+                  this->motorConstant;
+
+  using Pose = math::Pose3d;
+  using Vector3 = math::Vector3d;
+
+  Link link(this->linkEntity);
+  const auto worldPose = link.WorldPose(_ecm);
+
+  // Apply a force to the link.
+  link.AddWorldForce(_ecm,
+                      worldPose->Rot().RotateVector(Vector3(0, 0, thrust)));
+
+  const auto jointPose = _ecm.Component<components::Pose>(
+      this->jointEntity);
+  if (!jointPose)
+  {
+    ignerr << "joint " << this->jointName << " has no Pose"
+            << "component" << std::endl;
+    return;
+  }
+  // computer joint world pose by multiplying child link WorldPose
+  // with joint Pose
+  Pose jointWorldPose = *worldPose * jointPose->Data();
+
+  const auto jointAxisComp = _ecm.Component<components::JointAxis>(
+      this->jointEntity);
+  if (!jointAxisComp)
+  {
+    ignerr << "joint " << this->jointName << " has no JointAxis"
+            << "component" << std::endl;
+    return;
+  }
+
+  const auto worldLinearVel = link.WorldLinearVelocity(_ecm);
+
+  Entity windEntity = _ecm.EntityByComponents(components::Wind());
+  auto windLinearVel =
+      _ecm.Component<components::WorldLinearVelocity>(windEntity);
+  Vector3 windSpeedWorld = windLinearVel->Data();
+
+  // Forces from Philppe Martin's and Erwan Salaun's
+  // 2010 IEEE Conference on Robotics and Automation paper
+  // The True Role of Accelerometer Feedback in Quadrotor Control
+  // - \omega * \lambda_1 * V_A^{\perp}
+  Vector3 jointAxis =
+      jointWorldPose.Rot().RotateVector(jointAxisComp->Data().Xyz());
+  Vector3 bodyVelocityWorld = *worldLinearVel;
+  Vector3 relativeWindVelocityWorld = bodyVelocityWorld - windSpeedWorld;
+  Vector3 bodyVelocityPerpendicular =
+      relativeWindVelocityWorld -
+      (relativeWindVelocityWorld.Dot(jointAxis) * jointAxis);
+  Vector3 airDrag = -std::abs(realMotorVelocity) *
+                            this->rotorDragCoefficient *
+                            bodyVelocityPerpendicular;
+
+  // Apply air drag to link.
+  link.AddWorldForce(_ecm, airDrag);
+  // Moments get the parent link, such that the resulting torques can be
+  // applied.
+  Vector3 parentWorldTorque;
+  auto parentWrenchComp =
+    _ecm.Component<components::ExternalWorldWrenchCmd>(
+      this->parentLinkEntity);
+  // gazebo_motor_model.cpp subtracts the GetWorldCoGPose() of the
+  // child link from the parent but only uses the rotation component.
+  // Since GetWorldCoGPose() uses the link frame orientation, it
+  // is equivalent to use WorldPose().Rot().
+  Link parentLink(this->parentLinkEntity);
+  const auto parentWorldPose = parentLink.WorldPose(_ecm);
+  // The transformation from the parent_link to the link_.
+  // Pose poseDifference =
+  //  parent_links.at(0)->GetWorldCoGPose().Inverse()
+  //  * link_->GetWorldCoGPose()
+  Pose poseDifference = (*parentWorldPose).Inverse() * (*worldPose);
+  Vector3 dragTorque(
+      0, 0, -this->turningDirection * thrust * this->momentConstant);
+  // Transforming the drag torque into the parent frame to handle
+  // arbitrary rotor orientations.
+  Vector3 dragTorqueParentFrame =
+      poseDifference.Rot().RotateVector(dragTorque);
+  parentWorldTorque =
+      parentWorldPose->Rot().RotateVector(dragTorqueParentFrame);
+
+  Vector3 rollingMoment;
+  // - \omega * \mu_1 * V_A^{\perp}
+  rollingMoment = -std::abs(realMotorVelocity) *
+                    this->rollingMomentCoefficient *
+                    bodyVelocityPerpendicular;
+  parentWorldTorque += rollingMoment;
+  if (!parentWrenchComp)
+  {
+    components::ExternalWorldWrenchCmd wrench;
+    msgs::Set(wrench.Data().mutable_torque(), parentWorldTorque);
+    _ecm.CreateComponent(this->parentLinkEntity, wrench);
+  }
+  else
+  {
+    msgs::Set(parentWrenchComp->Data().mutable_torque(),
+      msgs::Convert(parentWrenchComp->Data().torque()) + parentWorldTorque);
+  }
+  // Apply the filter on the motor's velocity.
+  double refMotorRotVel;
+  refMotorRotVel = this->rotorVelocityFilter->UpdateFilter(
+      this->refMotorInput, this->samplingTime);
+
+  const auto jointVelCmd = _ecm.Component<components::JointVelocityCmd>(
+      this->jointEntity);
+  *jointVelCmd = components::JointVelocityCmd(
+      {this->turningDirection * refMotorRotVel
+                          / this->rotorVelocitySlowdownSim});
+
+
 }
 
 
 
-IGNITION_ADD_PLUGIN(Test,
+IGNITION_ADD_PLUGIN(Practice,
                     ignition::gazebo::System,
-                    Test::ISystemConfigure,
-                    Test::ISystemPreUpdate,
-                    Test::ISystemUpdate,
-                    Test::ISystemPostUpdate)
+                    Practice::ISystemConfigure,
+                    Practice::ISystemPreUpdate,
+                    Practice::ISystemUpdate,
+                    Practice::ISystemPostUpdate)
 
-IGNITION_ADD_PLUGIN_ALIAS(Test, "ignition::gazebo::systems::Test")
+IGNITION_ADD_PLUGIN_ALIAS(Practice, "ignition::gazebo::systems::Practice")

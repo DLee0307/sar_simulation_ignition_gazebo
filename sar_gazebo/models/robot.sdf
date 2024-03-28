@@ -1177,15 +1177,15 @@
             https://app.codecov.io/gh/gazebosim/gz-sim/pull/1953/blob/src/systems/joint_controller/JointController.cc-->
 
 
-            <plugin filename="/home/dlee/ros2_ws/install/sar_gazebo/lib/libTest.so"
-            name="ignition::gazebo::systems::Test">
+            <plugin filename="/home/dlee/ros2_ws/install/sar_gazebo/lib/libPractice.so"
+            name="ignition::gazebo::systems::Practice">
                 <robotNamespace>X3</robotNamespace>
                 <jointName>Prop_1_Joint</jointName>
                 <linkName>Prop_1</linkName>
                 <turningDirection>ccw</turningDirection>
                 <timeConstantUp>0.0125</timeConstantUp>
                 <timeConstantDown>0.025</timeConstantDown>
-                <maxRotVelocity>105.0</maxRotVelocity>
+                <maxRotVelocity>1050.0</maxRotVelocity>
                 <motorConstant>8.54858e-06</motorConstant>
                 <momentConstant>0.016</momentConstant>
                 <commandSubTopic>gazebo/command/motor_speed</commandSubTopic>
@@ -1196,57 +1196,57 @@
                 <rotorVelocitySlowdownSim>10</rotorVelocitySlowdownSim>
                 <motorType>velocity</motorType>        
             </plugin>
-            <plugin filename="/home/dlee/ros2_ws/install/sar_gazebo/lib/libTest.so"
-            name="ignition::gazebo::systems::Test">
+            <plugin filename="/home/dlee/ros2_ws/install/sar_gazebo/lib/libPractice.so"
+            name="ignition::gazebo::systems::Practice">
                 <robotNamespace>X3</robotNamespace>
                 <jointName>Prop_2_Joint</jointName>
                 <linkName>Prop_2</linkName>
                 <turningDirection>ccw</turningDirection>
                 <timeConstantUp>0.0125</timeConstantUp>
                 <timeConstantDown>0.025</timeConstantDown>
-                <maxRotVelocity>105.0</maxRotVelocity>
+                <maxRotVelocity>1050.0</maxRotVelocity>
                 <motorConstant>8.54858e-06</motorConstant>
                 <momentConstant>0.016</momentConstant>
                 <commandSubTopic>gazebo/command/motor_speed</commandSubTopic>
-                <motorNumber>0</motorNumber>
+                <motorNumber>1</motorNumber>
                 <rotorDragCoefficient>8.06428e-05</rotorDragCoefficient>
                 <rollingMomentCoefficient>1e-06</rollingMomentCoefficient>
                 <motorSpeedPubTopic>motor_speed/0</motorSpeedPubTopic>
                 <rotorVelocitySlowdownSim>10</rotorVelocitySlowdownSim>
                 <motorType>velocity</motorType>        
             </plugin>
-            <plugin filename="/home/dlee/ros2_ws/install/sar_gazebo/lib/libTest.so"
-            name="ignition::gazebo::systems::Test">
+            <plugin filename="/home/dlee/ros2_ws/install/sar_gazebo/lib/libPractice.so"
+            name="ignition::gazebo::systems::Practice">
                 <robotNamespace>X3</robotNamespace>
                 <jointName>Prop_3_Joint</jointName>
                 <linkName>Prop_3</linkName>
                 <turningDirection>cw</turningDirection>
                 <timeConstantUp>0.0125</timeConstantUp>
                 <timeConstantDown>0.025</timeConstantDown>
-                <maxRotVelocity>105.0</maxRotVelocity>
+                <maxRotVelocity>1050.0</maxRotVelocity>
                 <motorConstant>8.54858e-06</motorConstant>
                 <momentConstant>0.016</momentConstant>
                 <commandSubTopic>gazebo/command/motor_speed</commandSubTopic>
-                <motorNumber>0</motorNumber>
+                <motorNumber>2</motorNumber>
                 <rotorDragCoefficient>8.06428e-05</rotorDragCoefficient>
                 <rollingMomentCoefficient>1e-06</rollingMomentCoefficient>
                 <motorSpeedPubTopic>motor_speed/0</motorSpeedPubTopic>
                 <rotorVelocitySlowdownSim>10</rotorVelocitySlowdownSim>
                 <motorType>velocity</motorType>        
             </plugin>            
-            <plugin filename="/home/dlee/ros2_ws/install/sar_gazebo/lib/libTest.so"
-            name="ignition::gazebo::systems::Test">
+            <plugin filename="/home/dlee/ros2_ws/install/sar_gazebo/lib/libPractice.so"
+            name="ignition::gazebo::systems::Practice">
                 <robotNamespace>X3</robotNamespace>
                 <jointName>Prop_4_Joint</jointName>
                 <linkName>Prop_4</linkName>
                 <turningDirection>cw</turningDirection>
                 <timeConstantUp>0.0125</timeConstantUp>
                 <timeConstantDown>0.025</timeConstantDown>
-                <maxRotVelocity>105.0</maxRotVelocity>
+                <maxRotVelocity>1050.0</maxRotVelocity>
                 <motorConstant>8.54858e-06</motorConstant>
                 <momentConstant>0.016</momentConstant>
                 <commandSubTopic>gazebo/command/motor_speed</commandSubTopic>
-                <motorNumber>0</motorNumber>
+                <motorNumber>3</motorNumber>
                 <rotorDragCoefficient>8.06428e-05</rotorDragCoefficient>
                 <rollingMomentCoefficient>1e-06</rollingMomentCoefficient>
                 <motorSpeedPubTopic>motor_speed/0</motorSpeedPubTopic>
