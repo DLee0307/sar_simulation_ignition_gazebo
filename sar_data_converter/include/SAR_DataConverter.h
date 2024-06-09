@@ -1,12 +1,16 @@
 #pragma once
 
 // STANDARD INCLUDES
+#include <stdio.h>
 #include <iostream>
+
+//#include <boost/circular_buffer.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <math.h> 
 #include <thread>
 
 #include <ncurses.h>
+#include <Eigen/Dense>
 
 #include "sar_msgs/msg/ctrl_data.hpp"
 #include "sar_msgs/msg/ctrl_debug.hpp"
@@ -150,7 +154,8 @@ private:
     double Vel_angle_B_P = NAN;
     double D_perp = NAN;
     double D_perp_CR = NAN;
-    double D_perp_min = INFINITY;   
+    double D_perp_pad = INFINITY;
+    double D_perp_pad_min = INFINITY;   
 
     geometry_msgs::msg::Vector3 Optical_Flow;
     geometry_msgs::msg::Vector3 Optical_Flow_Cam;
@@ -168,9 +173,11 @@ private:
     geometry_msgs::msg::Vector3 v_d;
     geometry_msgs::msg::Vector3 a_d;
 
+
+    //!!!!! Need to compare with Boost!
     std::array<double, 4> FM{0, 0, 0, 0};
     std::array<double, 4> MotorThrusts{0, 0, 0, 0};
-    std::array<uint16_t, 4> MS_PWM{0, 0, 0, 0};
+    std::array<unsigned int, 4> Motor_CMD{0,0,0,0};
 
     //boost::array<double,4> NN_Output{NAN,NAN,NAN,NAN};
     double a_Trg = NAN;
@@ -219,10 +226,12 @@ private:
 
     geometry_msgs::msg::Pose Pose_B_O_impact_OB;
     geometry_msgs::msg::Vector3 Eul_B_O_impact_OB;
+    double Vel_mag_B_P_impact_OB = NAN;
+    double Vel_angle_B_P_impact_OB = NAN;
 
     geometry_msgs::msg::Twist Twist_B_P_impact_OB;
     geometry_msgs::msg::Vector3 Eul_P_B_impact_OB;
-    float Accel_B_O_Mag_impact_OB = NAN;
+    float dOmega_B_O_y_impact_OB = NAN;
 
 
     // ==========================

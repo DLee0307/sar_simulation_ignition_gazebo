@@ -13,6 +13,7 @@ find_package(sar_msgs REQUIRED)
 find_package(std_srvs REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(Curses REQUIRED)
+find_package(Eigen3 REQUIRED)
 
 include_directories(
   include
@@ -20,6 +21,7 @@ include_directories(
   ${sar_msgs_INCLUDE_DIRS}
   ${sar_config_INCLUDE_DIRS}
   ${CURSES_INCLUDE_DIR}
+  ${EIGEN3_INCLUDE_DIR}
  )
 
 # controller
@@ -30,7 +32,7 @@ add_executable(SAR_DataConverter
 	src/Debug_Console.cpp)
 ament_target_dependencies(SAR_DataConverter rclcpp std_msgs sar_msgs std_srvs)
 
-target_link_libraries(SAR_DataConverter ${CURSES_LIBRARIES})
+target_link_libraries(SAR_DataConverter ${CURSES_LIBRARIES} Eigen3::Eigen)
 
 install(TARGETS
   SAR_DataConverter

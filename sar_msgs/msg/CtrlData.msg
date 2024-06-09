@@ -10,8 +10,8 @@ float64 accel_b_o_mag
 
 geometry_msgs/Pose pose_p_b
 geometry_msgs/Twist twist_b_p
-float64 vel_mag_p_b
-float64 vel_angle_p_b
+float64 vel_mag_b_p
+float64 vel_angle_b_p
 float64 d_perp
 float64 d_perp_cr
 
@@ -29,7 +29,7 @@ geometry_msgs/Vector3 v_d
 geometry_msgs/Vector3 a_d
 
 float64[4] fm
-float64[4] motor_thrusts
+float64[4] motorthrusts
 uint32[4] motor_cmd
 
 float64[4] nn_output

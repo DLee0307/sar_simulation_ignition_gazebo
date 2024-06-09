@@ -279,6 +279,63 @@ float a_Trg = 0.0f;
 float a_Rot = 0.0f;
 float a_Rot_bounds[2] = {-1.0f,1.0f};
 
+// ==========================================
+//  RECORD SYSTEM STATES AT POLICY TRIGGER
+// ==========================================
+
+// BODY WRT ORIGIN STATES
+struct vec Pos_B_O_trg = {0.0f,0.0f,0.0f};         // Pos [m]
+struct vec Vel_B_O_trg = {0.0f,0.0f,0.0f};         // Vel [m/s]
+struct quat Quat_B_O_trg = {0.0f,0.0f,0.0f,1.0f};  // Orientation
+struct vec Omega_B_O_trg = {0.0f,0.0f,0.0f};       // Angular Rate [rad/s]
+
+
+// BODY WRT PLANE STATES
+struct vec Pos_P_B_trg = {0.0f,0.0f,0.0f};         // Pos [m]
+struct vec Vel_B_P_trg = {0.0f,0.0f,0.0f};         // Vel [m/s]
+struct quat Quat_P_B_trg = {0.0f,0.0f,0.0f,1.0f};  // Orientation
+struct vec Omega_B_P_trg = {0.0f,0.0f,0.0f};       // Angular Rate [rad/s]
+float Vel_mag_B_P_trg = 0.0f;                      // Velocity magnitude relative [m/s]
+float Vel_angle_B_P_trg = 0.0f;                    // Velocity angle relative [deg]
+float D_perp_trg = 0.0f;                           // Distance perp to plane [m]
+float D_perp_CR_trg = 0.0f;                        // Distance from CR to plane [m]
+
+
+
+// OPTICAL FLOW STATES
+float Tau_trg = 0.0f;               // [s]
+float Tau_CR_trg = 0.0f;            // [s]
+float Theta_x_trg = 0.0f;           // [rad/s]
+float Theta_y_trg = 0.0f;           // [rad/s]
+
+// OPTICAL FLOW CAMERA ESTIMATES
+float Tau_Cam_trg = 0.0f;           // [rad/s]
+float Theta_x_Cam_trg = 0.0f;       // [rad/s]
+float Theta_y_Cam_trg = 0.0f;       // [rad/s]
+
+// POLICY TRIGGER/ACTION VALUES
+float a_Trg_trg = 0.0f;    
+float a_Rot_trg = 0.0f;
+
+// ==================================================
+//  RECORD SYSTEM STATES AT ONBOARD IMPACT DETECTION
+// ==================================================
+bool Impact_Flag_OB = false;
+bool Impact_Flag_Ext = false;
+
+float Vel_mag_B_P_impact_OB = 0.0f;                     // Velocity magnitude relative [m/s]
+float Vel_angle_B_P_impact_OB = 0.0f;                   // Velocity angle relative [deg]
+struct quat Quat_B_O_impact_OB = {0.0f,0.0f,0.0f,1.0f}; // Orientation
+struct vec Omega_B_O_impact_OB = {0.0f,0.0f,0.0f};      // Angular Rate [rad/s]
+struct vec dOmega_B_O_impact_OB = {0.0f,0.0f,0.0f};     // Angular Accel [rad/s^2]
+
+uint16_t cycleCounter = 0;                              // Cycle counter to delay recorded impact states   
+float Vel_mag_B_P_prev_N = 0.0f;                        // Velocity magnitude relative [m/s]
+float Vel_angle_B_P_prev_N = 0.0f;                      // Velocity angle relative [deg]
+struct quat Quat_B_O_prev_N = {0.0f,0.0f,0.0f,1.0f};    // Orientation
+struct vec Omega_B_O_prev_N = {0.0f,0.0f,0.0f};         // Angular Rate [rad/s]
+struct vec dOmega_B_O_prev_N = {0.0f,0.0f,0.0f};        // Angular Accel [rad/s^2]
+
 // =================================
 //    LANDING SURFACE PARAMETERS
 // =================================

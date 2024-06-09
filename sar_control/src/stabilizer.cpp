@@ -572,8 +572,8 @@ void Controller::publishCtrlData()
     // PLANE RELATIVE STATES
     CtrlData_msg.d_perp = D_perp;
     CtrlData_msg.d_perp_cr = D_perp_CR;
-    CtrlData_msg.vel_mag_p_b = Vel_mag_B_P;
-    CtrlData_msg.vel_angle_p_b = Vel_angle_B_P;
+    CtrlData_msg.vel_mag_b_p = Vel_mag_B_P;
+    CtrlData_msg.vel_angle_b_p = Vel_angle_B_P;
 
     // OPTICAL FLOW DATA
     CtrlData_msg.optical_flow.x = Theta_x;
@@ -594,7 +594,7 @@ void Controller::publishCtrlData()
 
     // CONTROL ACTIONS
     CtrlData_msg.fm = {F_thrust,M.x*1.0e3,M.y*1.0e3,M.z*1.0e3};
-    CtrlData_msg.motor_thrusts = {M1_thrust,M2_thrust,M3_thrust,M4_thrust};
+    CtrlData_msg.motorthrusts = {M1_thrust,M2_thrust,M3_thrust,M4_thrust};
     CtrlData_msg.motor_cmd = {M1_CMD,M2_CMD,M3_CMD,M4_CMD};
 
     CtrlData_msg.x_d.x = x_d.x;
@@ -610,7 +610,7 @@ void Controller::publishCtrlData()
     CtrlData_msg.a_d.z = a_d.z;
 
 
-/*
+
     // ==========================
     //  STATES AT POLICY TRIGGER
     // ==========================
@@ -666,32 +666,31 @@ void Controller::publishCtrlData()
     CtrlData_msg.tau_cr_trg = Tau_CR_trg;
 
     // POLICY ACTIONS (TRIGGER)
-    CtrlData_msg.policy_trg_action_trg = Policy_Trg_Action_trg;
-    CtrlData_msg.policy_rot_action_trg = Policy_Rot_Action_trg;
+    //CtrlData_msg.NN_Output_trg = {tanhf(Y_output_trg[0]),tanhf(Y_output_trg[1]),Y_output_trg[2],Y_output_trg[3]};
+    CtrlData_msg.a_trg_trg = a_Trg_trg;
+    CtrlData_msg.a_rot_trg = a_Rot_trg;
+
 
     // ==========================
     //      STATES AT IMPACT
     // ==========================
     CtrlData_msg.impact_flag_ob = Impact_Flag_OB;
-    CtrlData_msg.accel_b_o_mag_impact_ob = Accel_B_O_Mag_impact_OB;
 
-    CtrlData_msg.pose_b_o_impact_ob.position.x = Pos_B_O_impact_OB.x;
-    CtrlData_msg.pose_b_o_impact_ob.position.y = Pos_B_O_impact_OB.y;
-    CtrlData_msg.pose_b_o_impact_ob.position.z = Pos_B_O_impact_OB.z;
+    CtrlData_msg.vel_mag_b_p_impact_ob = Vel_mag_B_P_impact_OB;
+    CtrlData_msg.vel_angle_b_p_impact_ob = Vel_angle_B_P_impact_OB;
 
     CtrlData_msg.pose_b_o_impact_ob.orientation.x = Quat_B_O_impact_OB.x;
     CtrlData_msg.pose_b_o_impact_ob.orientation.y = Quat_B_O_impact_OB.y;
     CtrlData_msg.pose_b_o_impact_ob.orientation.z = Quat_B_O_impact_OB.z;
     CtrlData_msg.pose_b_o_impact_ob.orientation.w = Quat_B_O_impact_OB.w;
 
-    CtrlData_msg.twist_b_p_impact_ob.linear.x = Vel_B_P_impact_OB.x;
-    CtrlData_msg.twist_b_p_impact_ob.linear.y = Vel_B_P_impact_OB.y;
-    CtrlData_msg.twist_b_p_impact_ob.linear.z = Vel_B_P_impact_OB.z;
 
-    CtrlData_msg.twist_b_p_impact_ob.angular.x = Omega_B_P_impact_OB.x;
-    CtrlData_msg.twist_b_p_impact_ob.angular.y = Omega_B_P_impact_OB.y;
-    CtrlData_msg.twist_b_p_impact_ob.angular.z = Omega_B_P_impact_OB.z;
-*/
+    CtrlData_msg.twist_b_p_impact_ob.angular.x = Omega_B_O_impact_OB.x;
+    CtrlData_msg.twist_b_p_impact_ob.angular.y = Omega_B_O_impact_OB.y;
+    CtrlData_msg.twist_b_p_impact_ob.angular.z = Omega_B_O_impact_OB.z;
+
+    CtrlData_msg.domega_b_o_y_impact_ob = dOmega_B_O_impact_OB.y;
+    
 
     
     CTRL_Data_Publisher->publish(CtrlData_msg);

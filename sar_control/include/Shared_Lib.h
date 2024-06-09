@@ -288,6 +288,64 @@ extern float a_Trg;
 extern float a_Rot;
 extern float a_Rot_bounds[2];
 
+// ==========================================
+//  RECORD SYSTEM STATES AT POLICY TRIGGER
+// ==========================================
+
+// BODY WRT ORIGIN STATES
+extern struct vec Pos_B_O_trg;     // Pos [m]
+extern struct vec Vel_B_O_trg;     // Vel [m/s]
+extern struct quat Quat_B_O_trg;   // Orientation
+extern struct vec Omega_B_O_trg;   // Angular Rate [rad/s]
+
+// BODY WRT PLANE STATES
+extern struct vec Pos_P_B_trg;              // Pos [m]
+extern struct vec Vel_B_P_trg;              // Vel [m/s]
+extern struct quat Quat_P_B_trg;            // Orientation
+extern struct vec Omega_B_P_trg;            // Angular Rate [rad/s]
+
+// RELATIVE STATES
+extern float D_perp_trg;                // Distance perp to plane [m]
+extern float D_perp_CR_trg;             // Distance from CR to plane [m]
+extern float Vel_mag_B_P_trg;           // Velocity magnitude relative [m/s]
+extern float Vel_angle_B_P_trg;         // Velocity angle relative [deg]
+
+
+
+// OPTICAL FLOW STATES
+extern float Tau_trg;                   // [rad/s]
+extern float Tau_CR_trg;                // [rad/s]
+extern float Theta_x_trg;               // [rad/s]
+extern float Theta_y_trg;               // [rad/s]
+
+// OPTICAL FLOW CAMERA ESTIMATES
+extern float Tau_Cam_trg;               // [rad/s]
+extern float Theta_x_Cam_trg;           // [rad/s]
+extern float Theta_y_Cam_trg;           // [rad/s]
+
+// POLICY TRIGGER/ACTION VALUES
+extern float a_Trg_trg;    
+extern float a_Rot_trg;
+
+
+// =================================
+//  RECORD SYSTEM STATES AT IMPACT
+// =================================
+extern bool Impact_Flag_OB;
+extern bool Impact_Flag_Ext;
+extern struct quat Quat_B_O_impact_OB;     // Orientation
+extern float Vel_mag_B_P_impact_OB;        // Velocity magnitude relative [m/s]
+extern float Vel_angle_B_P_impact_OB;      // Velocity angle relative [deg]
+extern struct vec Omega_B_O_impact_OB;     // Angular Rate [rad/s]
+extern struct vec dOmega_B_O_impact_OB;    // Angular Accel [rad/s^2]
+
+extern uint16_t cycleCounter;               // Cycle counter to delay recorded impact states   
+extern float Vel_mag_B_P_prev_N;            // Velocity magnitude relative [m/s]
+extern float Vel_angle_B_P_prev_N;          // Velocity angle relative [deg]
+extern struct quat Quat_B_O_prev_N;         // Orientation
+extern struct vec Omega_B_O_prev_N;         // Angular Rate [rad/s]
+extern struct vec dOmega_B_O_prev_N;        // Angular Accel [rad/s^2]
+
 // =================================
 //    LANDING SURFACE PARAMETERS
 // =================================
