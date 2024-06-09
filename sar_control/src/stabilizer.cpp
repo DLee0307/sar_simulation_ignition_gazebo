@@ -546,7 +546,7 @@ void Controller::publishCtrlData()
     CtrlData_msg.accel_b_o.angular.x = dOmega_B_O.x;
     CtrlData_msg.accel_b_o.angular.y = dOmega_B_O.y;
     CtrlData_msg.accel_b_o.angular.z = dOmega_B_O.z;
-/*
+
     CtrlData_msg.accel_b_o_mag = Accel_B_O_Mag;
 
 
@@ -588,13 +588,14 @@ void Controller::publishCtrlData()
     CtrlData_msg.optical_flow_cam.z = Tau_Cam;
 
     // POLICY ACTIONS
-    CtrlData_msg.policy_trg_action = Policy_Trg_Action;
-    CtrlData_msg.policy_rot_action = Policy_Rot_Action;
-*/
+    //CtrlData_msg.NN_Output = {tanhf(Y_output->data[0][0]),tanhf(Y_output->data[1][0]),Y_output->data[2][0],Y_output->data[3][0]};
+    CtrlData_msg.a_trg = a_Trg;
+    CtrlData_msg.a_rot = a_Rot;
+
     // CONTROL ACTIONS
     CtrlData_msg.fm = {F_thrust,M.x*1.0e3,M.y*1.0e3,M.z*1.0e3};
     CtrlData_msg.motor_thrusts = {M1_thrust,M2_thrust,M3_thrust,M4_thrust};
-    CtrlData_msg.ms_pwm = {M1_pwm,M2_pwm,M3_pwm,M4_pwm};
+    CtrlData_msg.motor_cmd = {M1_CMD,M2_CMD,M3_CMD,M4_CMD};
 
     CtrlData_msg.x_d.x = x_d.x;
     CtrlData_msg.x_d.y = x_d.y;

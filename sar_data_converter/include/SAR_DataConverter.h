@@ -172,8 +172,9 @@ private:
     std::array<double, 4> MotorThrusts{0, 0, 0, 0};
     std::array<uint16_t, 4> MS_PWM{0, 0, 0, 0};
 
-    double Policy_Trg_Action = NAN;
-    double Policy_Rot_Action = NAN;
+    //boost::array<double,4> NN_Output{NAN,NAN,NAN,NAN};
+    double a_Trg = NAN;
+    double a_Rot = NAN;
     double Rot_Sum = 0.0;
 
     // ==========================
@@ -205,8 +206,9 @@ private:
     double Theta_x_trg = NAN;
     double Theta_y_trg = NAN;
 
-    double Policy_Trg_Action_trg = NAN;
-    double Policy_Rot_Action_trg = NAN;
+    //boost::array<double,4> NN_Output_trg{NAN,NAN,NAN,NAN};
+    double a_Trg_trg = NAN;
+    double a_Rot_trg = NAN;
 
     // =======================
     //   ONBOARD IMPACT DATA
@@ -282,7 +284,7 @@ private:
     bool Policy_Armed_Flag = false;
 
     bool CamActive_Flag = false;
-    
+
     // SIM
     bool Sticky_Flag = false;
 };

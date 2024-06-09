@@ -211,15 +211,42 @@ extern float M2_thrust;
 extern float M3_thrust;
 extern float M4_thrust;
 
-// MOTOR PWM VALUES
-extern uint16_t M1_pwm; 
-extern uint16_t M2_pwm; 
-extern uint16_t M3_pwm; 
-extern uint16_t M4_pwm; 
+// MOTOR M_CMD VALUES
+extern uint16_t M1_CMD; 
+extern uint16_t M2_CMD; 
+extern uint16_t M3_CMD; 
+extern uint16_t M4_CMD; 
 
 // CONTROL OVERRIDE VALUES
-extern uint16_t PWM_override[4];    // Motor PWM values
+extern uint16_t M_CMD_override[4];    // Motor M_CMD values
 extern float thrust_override[4];    // Motor thrusts [g] 
+
+// =================================
+//        OPTICAL FLOW STATES
+// =================================
+
+// OPTICAL FLOW STATES (GROUND TRUTH)
+extern float Tau;           // [s]
+extern float Tau_CR;        // [s]
+extern float Theta_x;       // [rad/s] 
+extern float Theta_y;       // [rad/s]
+
+// OPTICAL FLOW STATES (CAMERA ESTIMATE)
+extern float Tau_Cam;      // [s]
+extern float Theta_x_Cam;  // [rad/s]
+extern float Theta_y_Cam;  // [rad/s]
+
+// CAMERA PARAMETERS
+extern float IW;            // Image Width [m]
+extern float IH;            // Image Height [m]
+extern float focal_len;     // Focal Length [m]
+extern int32_t N_up;        // Pixel Count Horizontal [m]
+extern int32_t N_vp;        // Pixel Count Vertical [m]
+extern int32_t Cam_dt;      // Time Between Images [ms]
+
+//extern int32_t UART_arr[UART_ARR_SIZE];
+extern bool isOFUpdated;
+
 
 // =================================
 //  FLAGS AND SYSTEM INITIALIZATION
@@ -255,6 +282,11 @@ extern PolicyType Policy;
 extern bool Policy_Armed_Flag;
 extern bool Trg_Flag;
 extern bool onceFlag;
+
+// POLICY TRIGGER/ACTION VALUES
+extern float a_Trg;  
+extern float a_Rot;
+extern float a_Rot_bounds[2];
 
 // =================================
 //    LANDING SURFACE PARAMETERS

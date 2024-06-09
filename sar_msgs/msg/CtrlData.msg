@@ -30,10 +30,11 @@ geometry_msgs/Vector3 a_d
 
 float64[4] fm
 float64[4] motor_thrusts
-uint32[4] ms_pwm
+uint32[4] motor_cmd
 
-float64 policy_trg_action
-float64 policy_rot_action
+float64[4] nn_output
+float64 a_trg
+float64 a_rot
 
 
 # ==========================
@@ -53,8 +54,10 @@ float64 d_perp_cr_trg
 
 geometry_msgs/Vector3 optical_flow_trg
 float64 tau_cr_trg
-float64 policy_trg_action_trg
-float64 policy_rot_action_trg
+
+float64[4] nn_output_trg
+float64 a_trg_trg
+float64 a_rot_trg
 
 # =========================
 #      STATES AT IMPACT
@@ -64,4 +67,6 @@ bool impact_flag_ob
 
 geometry_msgs/Pose pose_b_o_impact_ob
 geometry_msgs/Twist twist_b_p_impact_ob
-float64 accel_b_o_mag_impact_ob
+float64 vel_mag_b_p_impact_ob
+float64 vel_angle_b_p_impact_ob
+float64 domega_b_o_y_impact_ob

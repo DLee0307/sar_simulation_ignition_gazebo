@@ -190,14 +190,14 @@ float M2_thrust = 0.0f;     // Motor 2 [g]
 float M3_thrust = 0.0f;     // Motor 3 [g]
 float M4_thrust = 0.0f;     // Motor 4 [g]
 
-// MOTOR PWM VALUES
-uint16_t M1_pwm = 0;        // [0 - 65,535]
-uint16_t M2_pwm = 0;        // [0 - 65,535]
-uint16_t M3_pwm = 0;        // [0 - 65,535]
-uint16_t M4_pwm = 0;        // [0 - 65,535]
+// MOTOR M_CMD VALUES
+uint16_t M1_CMD = 0;        // [0 - 65,535]
+uint16_t M2_CMD = 0;        // [0 - 65,535]
+uint16_t M3_CMD = 0;        // [0 - 65,535]
+uint16_t M4_CMD = 0;        // [0 - 65,535]
 
 // CONTROL OVERRIDE VALUES
-uint16_t PWM_override[4] = {0,0,0,0};               // Motor PWM values
+uint16_t M_CMD_override[4] = {0,0,0,0};               // Motor M_CMD values
 float thrust_override[4] = {0.0f,0.0f,0.0f,0.0f};   // Motor thrusts [g] 
 
 
@@ -216,6 +216,33 @@ static struct vec R_effort; // Effort by rotational PID
 static struct mat33 RdT_R;  // Rd' * R
 static struct mat33 RT_Rd;  // R' * Rd
 static struct vec Gyro_dyn;
+
+// =================================
+//        OPTICAL FLOW STATES
+// =================================
+
+// OPTICAL FLOW STATES (GROUND TRUTH)
+float Tau = 0.0f;       // [s]
+float Tau_CR = 0.0f;    // [s]
+float Theta_x = 0.0f;   // [rad/s] 
+float Theta_y = 0.0f;   // [rad/s]
+
+// OPTICAL FLOW STATES (CAMERA ESTIMATE)
+float Tau_Cam = 0.0f;       // [s]
+float Theta_x_Cam = 0.0f;   // [rad/s]
+float Theta_y_Cam = 0.0f;   // [rad/s]
+
+// CAMERA PARAMETERS
+float IW = 1.152e-3f;       // Image Width [m]
+float IH = 1.152e-3f;       // Image Height [m]
+float focal_len = 0.66e-3f; // Focal Length [m]
+int32_t N_up = 160;         // Pixel Count Horizontal [m]
+int32_t N_vp = 160;         // Pixel Count Vertical [m]
+int32_t Cam_dt = 100;       // Time Between Images [ms]
+
+
+//int32_t UART_arr[UART_ARR_SIZE] = {0};
+bool isOFUpdated = false;
 
 // =================================
 //  FLAGS AND SYSTEM INITIALIZATION
@@ -246,6 +273,11 @@ PolicyType Policy = PARAM_OPTIM;
 bool Policy_Armed_Flag = false;
 bool Trg_Flag = false;
 bool onceFlag = false;
+
+// POLICY TRIGGER/ACTION VALUES
+float a_Trg = 0.0f;  
+float a_Rot = 0.0f;
+float a_Rot_bounds[2] = {-1.0f,1.0f};
 
 // =================================
 //    LANDING SURFACE PARAMETERS
