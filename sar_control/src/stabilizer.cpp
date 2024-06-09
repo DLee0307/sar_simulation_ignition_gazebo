@@ -398,7 +398,6 @@ void Controller::loadInitParams()
     RCLCPP_INFO(this->get_logger(), "i_range_R_z: %f", i_range_R_z);
 */
 
-    //publishROSParamData();
 }
 
 void Controller::loadParametersFromSim_SettingsFile(const std::string &file_path) {
