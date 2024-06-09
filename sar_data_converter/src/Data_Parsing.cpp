@@ -97,3 +97,19 @@ void SAR_DataConverter::CtrlData_Callback(const sar_msgs::msg::CtrlData::SharedP
     Accel_B_O_Mag_impact_OB = ctrl_msg->accel_b_o_mag_impact_ob;
 
 }
+
+void SAR_DataConverter::CtrlDebug_Callback(const sar_msgs::msg::CtrlDebug::SharedPtr ctrl_msg) 
+{
+    Tumbled_Flag = ctrl_msg->tumbled_flag;
+    TumbleDetect_Flag = ctrl_msg->tumbledetect_flag;
+    MotorStop_Flag = ctrl_msg->motorstop_flag;
+    AngAccel_Flag = ctrl_msg->angaccel_flag;
+    Armed_Flag = ctrl_msg->armed_flag;
+    CustomThrust_Flag = ctrl_msg->customthrust_flag;
+    CustomMotorCMD_Flag = ctrl_msg->custommotorcmd_flag;
+    
+    Pos_Ctrl_Flag = ctrl_msg->pos_ctrl_flag;
+    Vel_Ctrl_Flag = ctrl_msg->vel_ctrl_flag;
+    Policy_Armed_Flag = ctrl_msg->policy_armed_flag;
+    CamActive_Flag = ctrl_msg->camactive_flag;
+}

@@ -9,6 +9,7 @@
 #include <ncurses.h>
 
 #include "sar_msgs/msg/ctrl_data.hpp"
+#include "sar_msgs/msg/ctrl_debug.hpp"
 #include "sar_msgs/msg/sar_state_data.hpp"
 #include "sar_msgs/msg/ros_params.hpp"
 
@@ -28,6 +29,7 @@ public:
     //     GAZEBO CALLBACKS
     // =======================
     void CtrlData_Callback(const sar_msgs::msg::CtrlData::SharedPtr msg);
+    void CtrlDebug_Callback(const sar_msgs::msg::CtrlDebug::SharedPtr msg);
 
     // =======================
     //     ROS2 PARAMETER
@@ -108,10 +110,11 @@ private:
     float SIM_SPEED = 0.5; 
     float SIM_SLOWDOWN_SPEED = 0.5;
 
-    // =====================
-    //     GAZEBO OBJECTS
-    // =====================
+        // =======================
+        //     GAZEBO CALLBACKS
+        // =======================
     rclcpp::Subscription<sar_msgs::msg::CtrlData>::SharedPtr CTRL_Data_Sub;
+    rclcpp::Subscription<sar_msgs::msg::CtrlDebug>::SharedPtr CTRL_Debug_Sub;
 
     // ===========================
     //     ROS2 Parameter
@@ -270,20 +273,18 @@ private:
     bool TumbleDetect_Flag = false;
     bool MotorStop_Flag = false;
     bool AngAccel_Flag = false;
-    bool SafeMode_Flag = false;
+    bool Armed_Flag = false;
     bool CustomThrust_Flag = false;
-    bool CustomPWM_Flag = false;
+    bool CustomMotorCMD_Flag = false;
 
     bool Pos_Ctrl_Flag = false;
     bool Vel_Ctrl_Flag = false;
     bool Policy_Armed_Flag = false;
 
-
     bool CamActive_Flag = false;
-
+    
     // SIM
     bool Sticky_Flag = false;
-
 };
 
 // CONVERT QUATERNION TO EULER ANGLES (YZX NOTATION)

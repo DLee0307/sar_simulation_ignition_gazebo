@@ -23,11 +23,12 @@ void SAR_DataConverter::ConsoleLoop()
         mvprintw(1, 30,"Plane Model: %s",Plane_Config.c_str());
         mvprintw(2, 30,"Plane Angle: % 6.2f",Plane_Angle_deg);
 
+
         mvprintw(4, 0,"==== Flags ====");
-        mvprintw(5, 0,"SafeMode:   %u",SafeMode_Flag);
+        mvprintw(5, 0,"Quad_Armed: %u",Armed_Flag);
         mvprintw(6, 0,"MotorStop:  %u",MotorStop_Flag);
         mvprintw(7, 0,"Tumble:     %u",Tumbled_Flag);
-        mvprintw(8, 0,"Tumbl_Det:  %u",TumbleDetect_Flag);
+        mvprintw(8, 0,"Tumble_Det: %u",TumbleDetect_Flag);
 
         mvprintw(5, 15,"Policy_Armed:    %u",Policy_Armed_Flag);
         mvprintw(6, 15,"Trg_Flag:        %u",Trg_Flag);
@@ -36,7 +37,7 @@ void SAR_DataConverter::ConsoleLoop()
 
         mvprintw(5, 35,"Pos_Ctrl:       %u",Pos_Ctrl_Flag);
         mvprintw(6, 35,"Vel_Ctrl:       %u",Vel_Ctrl_Flag);
-        mvprintw(7, 35,"Custom_PWM:     %u",CustomPWM_Flag);
+        mvprintw(7, 35,"Custom_MotCMD:  %u",CustomMotorCMD_Flag);
         mvprintw(8, 35,"Custom_Thrust:  %u",CustomThrust_Flag);
 
         mvprintw(5, 55,"Ang_Accel:   %u",AngAccel_Flag);
