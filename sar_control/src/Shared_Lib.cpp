@@ -19,6 +19,7 @@ const struct vec e_3 = {0.0f, 0.0f, 1.0f};    // Global z-axis
 float dt = (float)(1.0f/RATE_100_HZ);
 uint32_t prev_tick = 0;
 struct CTRL_CmdPacket CTRL_Cmd;
+SAR_Types SAR_Type = SAR_NONE;
 
 // =================================
 //    ROS2 PARAMETER
@@ -217,6 +218,7 @@ static struct mat33 RdT_R;  // Rd' * R
 static struct mat33 RT_Rd;  // R' * Rd
 static struct vec Gyro_dyn;
 
+
 // =================================
 //        OPTICAL FLOW STATES
 // =================================
@@ -268,6 +270,9 @@ bool CamActive_Flag = false;
 
 // DEFINE POLICY TYPE ACTIVATED
 PolicyType Policy = PARAM_OPTIM;
+//nml_mat* X_input;       // STATE MATRIX TO BE INPUT INTO POLICY
+//nml_mat* Y_output;      // POLICY OUTPUT MATRIX
+//float Y_output_trg[4];  // POLICY OUTPUT MATRIX
 
 // POLICY FLAGS
 bool Policy_Armed_Flag = false;
@@ -278,6 +283,12 @@ bool onceFlag = false;
 float a_Trg = 0.0f;  
 float a_Rot = 0.0f;
 float a_Rot_bounds[2] = {-1.0f,1.0f};
+
+// ===============================
+//  DEEP RL POLICY INITIALIZATION
+// ===============================
+
+//NN NN_DeepRL;
 
 // ==========================================
 //  RECORD SYSTEM STATES AT POLICY TRIGGER
@@ -341,6 +352,12 @@ struct vec dOmega_B_O_prev_N = {0.0f,0.0f,0.0f};        // Angular Accel [rad/s^
 // =================================
 float Plane_Angle_deg = 0.0f;           // Plane Angle [deg]
 struct vec r_P_O = {0.0f,0.0f,0.0f};    // Plane Position Vector        [m]
+
+// =================================
+//         ROTATION MATRICES
+// =================================
+struct mat33 R_WP;                      // Rotation matrix from world to plane
+struct mat33 R_PW;                      // Rotation matrix from plane to world
 
 void CTRL_Command(struct CTRL_CmdPacket *CTRL_Cmd)
 {

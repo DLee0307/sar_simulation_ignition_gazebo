@@ -3,6 +3,7 @@
 #define g2Newton (9.81f/1000.0f)
 #define Newton2g (1000.0f/9.81f)
 
+// !!!!! buffer bost NN output need to be solved
 void SAR_DataConverter::CtrlData_Callback(const sar_msgs::msg::CtrlData::SharedPtr ctrl_msg) {
 
     // ===================
@@ -269,7 +270,7 @@ void SAR_DataConverter::CtrlData_Callback(const sar_msgs::msg::CtrlData::SharedP
 */
 
 }
-
+//!!!!! Completed
 void SAR_DataConverter::CtrlDebug_Callback(const sar_msgs::msg::CtrlDebug::SharedPtr ctrl_msg) 
 {
     Tumbled_Flag = ctrl_msg->tumbled_flag;

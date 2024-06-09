@@ -35,6 +35,14 @@ extern float Thrust_max;        // Max thrust per motor [g]
 extern float dt;                // Controller cycle time
 extern uint32_t prev_tick;
 
+typedef enum {
+    SAR_NONE = 0,
+    CRAZYFLIE = 1,
+    IMPULSE_MICRO = 2,
+    SO_V5 = 3,
+}SAR_Types;
+extern SAR_Types SAR_Type;
+
 // =================================
 //    ROS2 PARAMETER
 // =================================
@@ -277,6 +285,15 @@ typedef enum {
 }PolicyType;
 extern PolicyType Policy;
 
+//extern nml_mat* X_input;        // STATE MATRIX TO BE INPUT INTO POLICY
+//extern nml_mat* Y_output;       // POLICY OUTPUT MATRIX
+//extern float Y_output_trg[4];   // POLICY OUTPUT ARRAY
+
+// ===============================
+//  DEEP RL POLICY INITIALIZATION
+// ===============================
+
+//extern NN NN_DeepRL;
 
 // POLICY FLAGS
 extern bool Policy_Armed_Flag;
@@ -351,6 +368,12 @@ extern struct vec dOmega_B_O_prev_N;        // Angular Accel [rad/s^2]
 // =================================
 extern float Plane_Angle_deg;   // Plane Angle [deg]
 extern struct vec r_P_O;        // Plane Position Vector        [m]
+
+// =================================
+//         ROTATION MATRICES
+// =================================
+extern struct mat33 R_WP;       // Rotation matrix from world to plane
+extern struct mat33 R_PW;       // Rotation matrix from plane to world
 
 // CTRL COMMAND PACKETS
 struct CTRL_CmdPacket{

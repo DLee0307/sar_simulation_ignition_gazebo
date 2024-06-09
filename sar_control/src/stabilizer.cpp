@@ -31,6 +31,34 @@ Controller::Controller()
     controllerThread = std::thread(&Controller::stabilizerLoop, this);
 }
 
+//From : SAR_DataConverter.h TO : CTRL_Command(&CTRL_Cmd);
+void Controller::CMD_Service_Resp(const sar_msgs::srv::CTRLCmdSrv::Request::SharedPtr request,
+                     sar_msgs::srv::CTRLCmdSrv::Response::SharedPtr response) {
+    std::cout << "service is requested in controller : " <<  std::endl;
+    
+    // RESPOND THE SRV WAS RECIEVED
+    response->srv_success = true;
+
+    // UPDATE CTRL_Cmd STRUCT VALUES
+    CTRL_Cmd.cmd_type = request->cmd_type;
+    CTRL_Cmd.cmd_val1 = request->cmd_vals.x;
+    CTRL_Cmd.cmd_val2 = request->cmd_vals.y;
+    CTRL_Cmd.cmd_val3 = request->cmd_vals.z;
+    CTRL_Cmd.cmd_flag = request->cmd_flag;
+    CTRL_Cmd.cmd_rx = request->cmd_rx;
+
+    //std::cout << request->cmd_type <<  std::endl;                    
+    //std::cout << "cmd_type: " << request->cmd_type <<  std::endl;
+    //std::cout << "cmd_val1: " << request->cmd_vals.x <<  std::endl;
+    //std::cout << "cmd_val2: " << request->cmd_vals.y <<  std::endl;
+    //std::cout << "cmd_val3: " << request->cmd_vals.z <<  std::endl;
+    //std::cout << "cmd_flag: " << request->cmd_flag <<  std::endl;
+    //std::cout << "cmd_rx: " << request->cmd_rx <<  std::endl;
+
+
+}
+
+
 void Controller::Vicon_Update_Callback(const sar_msgs::msg::ViconData::SharedPtr msg) {
     Vicon_Data = msg;
 
@@ -82,34 +110,6 @@ void Controller::IMU_Update_Callback(const sar_msgs::msg::IMUData::SharedPtr msg
     std::cout << "linear_acceleration(z) : " << msg->linear_acceleration.z << std::endl;*/
 }
 
-//From : SAR_DataConverter.h TO : CTRL_Command(&CTRL_Cmd);
-void Controller::CMD_Service_Resp(const sar_msgs::srv::CTRLCmdSrv::Request::SharedPtr request,
-                     sar_msgs::srv::CTRLCmdSrv::Response::SharedPtr response) {
-    std::cout << "service is requested in controller : " <<  std::endl;
-    
-    // RESPOND THE SRV WAS RECIEVED
-    response->srv_success = true;
-
-    // UPDATE CTRL_Cmd STRUCT VALUES
-    CTRL_Cmd.cmd_type = request->cmd_type;
-    CTRL_Cmd.cmd_val1 = request->cmd_vals.x;
-    CTRL_Cmd.cmd_val2 = request->cmd_vals.y;
-    CTRL_Cmd.cmd_val3 = request->cmd_vals.z;
-    CTRL_Cmd.cmd_flag = request->cmd_flag;
-    CTRL_Cmd.cmd_rx = request->cmd_rx;
-
-    //std::cout << request->cmd_type <<  std::endl;                    
-    //std::cout << "cmd_type: " << request->cmd_type <<  std::endl;
-    //std::cout << "cmd_val1: " << request->cmd_vals.x <<  std::endl;
-    //std::cout << "cmd_val2: " << request->cmd_vals.y <<  std::endl;
-    //std::cout << "cmd_val3: " << request->cmd_vals.z <<  std::endl;
-    //std::cout << "cmd_flag: " << request->cmd_flag <<  std::endl;
-    //std::cout << "cmd_rx: " << request->cmd_rx <<  std::endl;
-
-    
-    //CTRL_Command(&CTRL_Cmd);
-    //point2point_Traj();
-}
 
 // LOAD VALUES FROM ROSPARAM SERVER INTO CONTROLLER
 void Controller::loadInitParams()
@@ -516,6 +516,7 @@ void Controller::loadParametersFromModel_TypesFile(const std::string &file_path)
     }
 }
 
+//!!!!! NN output need to solved
 // PUBLISH CONTROLLER DATA ON ROS TOPIC
 void Controller::publishCtrlData()
 {
@@ -691,11 +692,10 @@ void Controller::publishCtrlData()
 
     CtrlData_msg.domega_b_o_y_impact_ob = dOmega_B_O_impact_OB.y;
     
-
-    
     CTRL_Data_Publisher->publish(CtrlData_msg);
 }
 
+//!!!!! completed
 void Controller::publishCtrlDebug()
 {
     CtrlDebug_msg.tumbled_flag = Tumbled_Flag;
@@ -811,7 +811,7 @@ void Controller::appLoop()
     // RUN STABILIZER LOOP
     while (rclcpp::ok())
     {
-        appMain(); //?? How can I search the appMain() function?  In Controller_GTC.c
+        appMain();
         
         rate.sleep();
     }
