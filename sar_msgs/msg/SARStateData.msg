@@ -15,8 +15,11 @@ geometry_msgs/Vector3 eul_p_b
 float64 vel_mag_b_p
 float64 vel_angle_b_p
 float64 d_perp
-float64 d_perp_min
+float64 d_perp_pad_min
+float64 d_perp_pad
 float64 d_perp_cr
+
+
 
 ## OPTICAL FLOW STATES
 geometry_msgs/Vector3 optical_flow
@@ -31,8 +34,9 @@ geometry_msgs/Vector3 a_d
 ## CONTROL ACTIONS
 float64[4] fm
 float64[4] motorthrusts
-uint32[4] ms_pwm
+uint32[4] motor_cmd
 
 ## POLICY ACTIONS
-float64 policy_trg_action
-float64 policy_rot_action
+float64[4] nn_output
+float64 a_trg
+float64 a_rot

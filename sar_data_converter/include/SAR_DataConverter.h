@@ -254,7 +254,22 @@ private:
     std::string BodyCollision_str = "SAR_Body::Body_Collision_";
     std::string LegCollision_str = "Leg_Collision_";
 
+    // ==========================
+    //    IMPACT FORCE DATA
+    // ==========================
+    bool Impact_Flag = false;
+    geometry_msgs::msg::Vector3 Force_impact;
+    double Force_Impact_x = 0.0; // Max impact force in X-direction [N]
+    double Force_Impact_y = 0.0; // Max impact force in Y-direction [N]
+    double Force_Impact_z = 0.0; // Max impact force in Z-direction [N]
+    double Impact_Magnitude = 0.0; // Current impact force magnitude
 
+    // CIRCULAR BUFFERES TO LAG IMPACT STATE DATA (WE WANT STATE DATA THE INSTANT BEFORE IMPACT)
+    //boost::circular_buffer<geometry_msgs::msg::Pose> Pose_B_O_impact_buff {2};
+    //boost::circular_buffer<geometry_msgs::msg::Vector3> Eul_B_O_impact_buff {2};
+
+    //boost::circular_buffer<geometry_msgs::msg::Twist> Twist_P_B_impact_buff {2};
+    //boost::circular_buffer<geometry_msgs::msg::Vector3> Eul_P_B_impact_buff {2};
 
     // ==================
     //     MISC DATA
@@ -296,6 +311,33 @@ private:
 
     // SIM
     bool Sticky_Flag = false;
+
+    // ===================
+    //     RL DATA
+    // ===================
+    //ros::Subscriber RL_Data_Sub;
+    uint8_t K_ep = 0;
+    uint8_t K_run = 0;
+    uint8_t n_rollouts = 8;
+
+    //boost::array<double,2> mu{0,0};
+    //boost::array<float,2> sigma{0,0};
+    //boost::array<float,2> policy{0,0};
+
+    float reward = 0.0;
+    //boost::array<float,6> reward_vals{0,0,0,0,0,0};
+
+
+    //boost::array<float,3> vel_d{0,0,0};
+
+    // =========================
+    //     LOGGING VARIABLES
+    // =========================
+    //ros::ServiceServer Logging_Service;
+    FILE* fPtr; // File Pointer to logging file
+    bool Logging_Flag = false;
+    std::string error_string = "No_Data";    
+
 };
 
 // CONVERT QUATERNION TO EULER ANGLES (YZX NOTATION)
