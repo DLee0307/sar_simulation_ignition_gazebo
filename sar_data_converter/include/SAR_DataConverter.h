@@ -15,6 +15,7 @@
 #include "sar_msgs/msg/ctrl_data.hpp"
 #include "sar_msgs/msg/ctrl_debug.hpp"
 #include "sar_msgs/msg/sar_state_data.hpp"
+#include "sar_msgs/msg/sar_trigger_data.hpp"
 #include "sar_msgs/msg/ros_params.hpp"
 
 #include "sar_msgs/srv/ctrl_cmd_srv.hpp"
@@ -50,7 +51,8 @@ public:
     //     ORGANIZED DATA PUBLISHERS
     // =================================
     void Publish_StateData();
-
+    void Publish_TriggerData();
+    
     // =======================
     //     MISC. FUNCTIONS
     // =======================
@@ -288,8 +290,10 @@ private:
     //     DATA PUBLISH OBJECTS
     // ============================
     rclcpp::Publisher<sar_msgs::msg::SARStateData>::SharedPtr StateData_Pub;
+    rclcpp::Publisher<sar_msgs::msg::SARTriggerData>::SharedPtr TriggerData_Pub;
 
     sar_msgs::msg::SARStateData StateData_msg;
+    sar_msgs::msg::SARTriggerData TriggerData_msg;
 
     // ====================
     //     DEBUG VALUES

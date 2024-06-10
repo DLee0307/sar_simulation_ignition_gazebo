@@ -15,6 +15,7 @@ SAR_DataConverter::SAR_DataConverter()
 
         // INITIALIZE STATE DATA PUBLISHERS
         StateData_Pub = this->create_publisher<sar_msgs::msg::SARStateData>("/SAR_DC/StateData", 1);
+        TriggerData_Pub = this->create_publisher<sar_msgs::msg::SARTriggerData>("/SAR_DC/TriggerData", 1);
 
         // INITIALIZE SAR_DC THREADS
         SAR_DC_Thread = std::thread(&SAR_DataConverter::MainLoop, this);
@@ -132,7 +133,7 @@ void SAR_DataConverter::MainLoop()
         
         // PUBLISH ORGANIZED DATA
         Publish_StateData();
-        //Publish_TriggerData();
+        Publish_TriggerData();
         //Publish_ImpactData();
         //Publish_MiscData();
 

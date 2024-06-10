@@ -12,6 +12,10 @@ void SAR_DataConverter::Publish_StateData()
     StateData_msg.time.sec = Time_delta.seconds();
     StateData_msg.time.nanosec = Time_delta.nanoseconds();
 
+    //ros::Duration Time_delta(Time-Time_start);
+    //StateData_msg.Time.data.sec = Time_delta.sec;
+    //StateData_msg.Time.data.nsec = Time_delta.nsec;
+
     // STATES WRT ORIGIN
     StateData_msg.pose_b_o = Pose_B_O;
     StateData_msg.twist_b_o = Twist_B_O;
@@ -55,4 +59,41 @@ void SAR_DataConverter::Publish_StateData()
     // PUBLISH STATE DATA RECEIVED FROM CONTROLLER
     StateData_Pub->publish(StateData_msg);
     //std::cout << "StateData is published: " << std::endl; 
+}
+
+void SAR_DataConverter::Publish_TriggerData()
+{
+    //ros::Duration Time_delta(Time_trg-Time_start);
+    //TriggerData_msg.Time_trg.data.sec = Time_delta.sec;
+    //TriggerData_msg.Time_trg.data.nsec = Time_delta.nsec;
+
+    // STATES WRT ORIGIN
+    TriggerData_msg.pose_b_o_trg = Pose_B_O_trg;
+    TriggerData_msg.twist_b_o_trg = Twist_B_O_trg;
+    TriggerData_msg.eul_b_o_trg = Eul_B_O_trg;
+
+    TriggerData_msg.vel_mag_b_o_trg = Vel_mag_B_O_trg;
+    TriggerData_msg.vel_angle_b_o_trg = Vel_angle_B_O_trg;
+
+    // STATES WRT PLANE
+    TriggerData_msg.pose_p_b_trg = Pose_P_B_trg;
+    TriggerData_msg.twist_b_p_trg = Twist_B_P_trg;
+    TriggerData_msg.eul_p_b_trg = Eul_P_B_trg;
+
+    TriggerData_msg.vel_mag_b_p_trg = Vel_mag_B_P_trg;
+    TriggerData_msg.vel_angle_b_p_trg = Vel_angle_B_P_trg;
+    TriggerData_msg.d_perp_trg = D_perp_trg;
+    TriggerData_msg.d_perp_cr_trg = D_perp_CR_trg;
+
+    // OPTICAL FLOW STATES
+    TriggerData_msg.optical_flow_trg = Optical_Flow_trg;
+    TriggerData_msg.tau_cr_trg = Tau_CR_trg;
+
+    // POLICY ACTIONS
+    //TriggerData_msg.nn_output_trg = NN_Output_trg;
+    TriggerData_msg.a_trg_trg = a_Trg_trg;
+    TriggerData_msg.a_rot_trg = a_Rot_trg;
+
+    TriggerData_Pub->publish(TriggerData_msg);
+
 }

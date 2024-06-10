@@ -22,6 +22,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/ViconData.msg"
   "msg/MotorThrust.msg"
   "msg/SARStateData.msg"
+  "msg/SARTriggerData.msg"
   "msg/ROSParams.msg"
   "srv/SetTrigger.srv"
   "srv/CTRLCmdSrv.srv"
