@@ -13,6 +13,17 @@ float j_t[3] = {20.0f, 20.0f, 20.0f};    // Traj Jerk [m/s^3]
 float T[3] = {0.0f, 0.0f, 0.0f};            // Traj completion time [s]
 float t_traj[3] = {0.0f, 0.0f, 0.0f};       // Traj time counter [s]
 
+void resetTraj_Vals(uint8_t axis)
+{
+    Traj_Active[axis] = false;
+    s_0_t[axis] = 0.0f;
+    s_f_t[axis] = 0.0f;
+    v_t[axis] = 0.0f;
+    a_t[axis] = 0.0f;
+    T[axis] = 0.0f;
+    t_traj[axis] = 0.0f;
+}
+
 void point2point_Traj()
 {
     // ITERATE THROUGH EACH AXIS

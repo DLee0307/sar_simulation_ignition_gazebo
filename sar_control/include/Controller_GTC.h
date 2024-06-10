@@ -15,8 +15,8 @@
 
 // CUSTOM LIBRARIES
 #include "Shared_Lib.h"
-#include "Traj_Funcs.h"
-#include "stabilizer.h"
+//#include "Traj_Funcs.h"
+//#include "stabilizer.h"
 
 void controllerOutOfTreeReset();
 void controllerOutOfTreeInit();

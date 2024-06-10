@@ -364,7 +364,7 @@ void CTRL_Command(struct CTRL_CmdPacket *CTRL_Cmd)
     switch(CTRL_Cmd->cmd_type){
         case 0: // Reset
             //std::cout << "Case 0:" << std::endl;
-
+            controllerOutOfTreeReset();
             break;
 
         case 1: // Position

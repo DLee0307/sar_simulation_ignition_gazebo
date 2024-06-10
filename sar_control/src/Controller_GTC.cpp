@@ -58,7 +58,7 @@ bool controllerOutOfTreeTest() {
 void controllerOutOfTreeReset() {
 
     RCLCPP_INFO(rclcpp::get_logger("GTC_Controller"), "GTC Controller Reset");
-    //RCLCPP_INFO(rclcpp::get_logger("GTC_Controller"), "SAR_Type: %d\n",SAR_Type);
+    RCLCPP_INFO(rclcpp::get_logger("GTC_Controller"), "SAR_Type: %d\n",SAR_Type);
     RCLCPP_INFO(rclcpp::get_logger("GTC_Controller"), "Policy_Type: %d\n", Policy);
     
     J = mdiag(Ixx,Iyy,Izz);
@@ -78,43 +78,68 @@ void controllerOutOfTreeReset() {
     b1_d = mkvec(1.0f,0.0f,0.0f);
 
     // RESET SYSTEM FLAGS
-    //Tumbled_Flag = false;
-    //MotorStop_Flag = false;
-    //CustomThrust_Flag = false;
-    //CustomPWM_Flag = false;
-    //AngAccel_Flag = false;
+    Tumbled_Flag = false;
+    CustomThrust_Flag = false;
+    CustomMotorCMD_Flag = false;
+    AngAccel_Flag = false;
 
     // RESET TRAJECTORY FLAGS
     Traj_Type = NONE;
+    resetTraj_Vals(0);
+    resetTraj_Vals(1);
+    resetTraj_Vals(2);
 
     // RESET POLICY FLAGS
-    //Policy_Armed_Flag = false;
-    //Trg_Flag = false;
-    //onceFlag = false;
+    Policy_Armed_Flag = false;
+    Trg_Flag = false;
+    onceFlag = false;
 
     // UPDATE COLLISION RADIUS
-    //Collision_Radius = max(L_eff,Forward_Reach);
-
+    Collision_Radius = L_eff;
 
     // RESET LOGGED TRIGGER VALUES
-    //Trg_Flag = false;
-    //Pos_B_O_trg = vzero();
-    //Vel_B_O_trg = vzero();
-    //Quat_B_O_trg = mkquat(0.0f,0.0f,0.0f,1.0f);
-    //Omega_B_O_trg = vzero();
+    Trg_Flag = false;
+    Pos_B_O_trg = vzero();
+    Vel_B_O_trg = vzero();
+    Quat_B_O_trg = mkquat(0.0f,0.0f,0.0f,1.0f);
+    Omega_B_O_trg = vzero();
 
-    //Pos_P_B_trg = vzero();
-    //Vel_B_P_trg = vzero();
-    //Quat_P_B_trg = mkquat(0.0f,0.0f,0.0f,1.0f);
-    //Omega_B_P_trg = vzero();
+    Pos_P_B_trg = vzero();
+    Vel_B_P_trg = vzero();
+    Quat_P_B_trg = mkquat(0.0f,0.0f,0.0f,1.0f);
+    Omega_B_P_trg = vzero();
 
-    //Theta_x_trg = 0.0f;
-    //Theta_y_trg = 0.0f;
-    //Tau_trg = 0.0f;
-    //Tau_CR_trg = 0.0f;
+    D_perp_trg = 0.0f;
+    D_perp_CR_trg = 0.0f;
 
-    //Policy_Trg_Action_trg = 0.0f;
-    //Policy_Rot_Action_trg = 0.0f;
+    Theta_x_trg = 0.0f;
+    Theta_y_trg = 0.0f;
+    Tau_trg = 0.0f;
+    Tau_CR_trg = 0.0f;
+
+    //Y_output_trg[0] = 0.0f;
+    //Y_output_trg[1] = 0.0f;
+    //Y_output_trg[2] = 0.0f;
+    //Y_output_trg[3] = 0.0f;
+
+    a_Trg_trg = 0.0f;
+    a_Rot_trg = 0.0f;
+
+    // RESET LOGGED IMPACT VALUES
+    Impact_Flag_OB = false;
+    Impact_Flag_Ext = false;
+    Vel_mag_B_P_impact_OB = 0.0f;
+    Vel_angle_B_P_impact_OB = 0.0f;
+    Quat_B_O_impact_OB = mkquat(0.0f,0.0f,0.0f,1.0f);
+    Omega_B_O_impact_OB = vzero();
+    dOmega_B_O_impact_OB = vzero();
+
+
+    // TURN OFF IMPACT LEDS
+    #ifdef CONFIG_SAR_EXP
+    ledSet(LED_GREEN_L, 0);
+    ledSet(LED_BLUE_NRF, 0);
+    #endif
 
 
 }
@@ -122,8 +147,7 @@ void controllerOutOfTreeReset() {
 void controllerOutOfTreeInit() {
 
     #ifdef CONFIG_SAR_EXP
-    ledSet(LED_BLUE_L, 0);
-    ledSet(LED_BLUE_NRF, 0);
+
     #endif
 
     controllerOutOfTreeReset();

@@ -232,8 +232,8 @@ class SAR_Base_Interface(Node):
     # ============================
     def handle_Ctrl_Reset(self):
         print("Reset controller to default values\n")
-        self.sendCmd("GZ_StickyPads",cmd_flag=0)
-        self.sendCmd("Ctrl_Reset")
+        #self.sendCmd("GZ_StickyPads",cmd_flag=0)
+        self.sendCmd("Ctrl_Reset", cmd_vals=[1.0,1.0,1.0])
 
     def handle_Pos_Cmd(self):
         cmd_vals = self.userInput("Set desired position values (x,y,z): ",float)
