@@ -97,3 +97,71 @@ void SAR_DataConverter::Publish_TriggerData()
     TriggerData_Pub->publish(TriggerData_msg);
 
 }
+
+void SAR_DataConverter::Publish_ImpactData()
+{
+    ImpactData_msg.impact_flag = Impact_Flag;
+
+    // ONBOARD IMPACT DATA
+    //ros::Duration Time_delta_OB(Time_impact_OB-Time_start);
+    //ImpactData_msg.Time_impact_OB.data.sec = Time_delta_OB.sec;
+    //ImpactData_msg.Time_impact_OB.data.nsec = Time_delta_OB.nsec;
+
+    ImpactData_msg.impact_flag_ob = Impact_Flag_OB;
+
+    ImpactData_msg.pose_b_o_impact_ob = Pose_B_O_impact_OB;
+    ImpactData_msg.eul_b_o_impact_ob = Eul_B_O_impact_OB;
+    ImpactData_msg.twist_b_p_impact_ob = Twist_B_P_impact_OB;
+    ImpactData_msg.eul_p_b_impact_ob = Eul_P_B_impact_OB;
+
+    // EXTERNAL IMPACT DATA
+    //ros::Duration Time_delta_Ext(Time_impact_Ext-Time_start);
+    //ImpactData_msg.Time_impact_Ext.data.sec = Time_delta_Ext.sec;
+    //ImpactData_msg.Time_impact_Ext.data.nsec = Time_delta_Ext.nsec;
+
+    ImpactData_msg.impact_flag_ext = Impact_Flag_Ext;
+    ImpactData_msg.bodycontact_flag = BodyContact_Flag;
+    ImpactData_msg.forelegcontact_flag = ForelegContact_Flag;
+    ImpactData_msg.hindlegcontact_flag = HindlegContact_Flag;
+
+    ImpactData_msg.pose_b_o_impact_ext = Pose_B_O_impact_Ext;
+    ImpactData_msg.eul_b_o_impact_ext = Eul_B_O_impact_Ext;
+    
+    ImpactData_msg.twist_b_p_impact_ext = Twist_B_P_impact_Ext;
+    ImpactData_msg.eul_p_b_impact_ext = Eul_P_B_impact_Ext;
+    ImpactData_msg.rot_sum_impact_ext = Rot_Sum_impact_Ext;
+
+    // IMPACT FORCES
+    ImpactData_msg.force_impact.x = Force_Impact_x;
+    ImpactData_msg.force_impact.y = Force_Impact_y;
+    ImpactData_msg.force_impact.z = Force_Impact_z;
+    ImpactData_msg.impact_magnitude = Impact_Magnitude;
+
+
+    // STICKY PAD CONTACTS
+    ImpactData_msg.pad_connections = Pad_Connections;
+
+    ImpactData_msg.pad1_contact = Pad1_Contact;
+    ImpactData_msg.pad2_contact = Pad2_Contact;
+    ImpactData_msg.pad3_contact = Pad3_Contact;
+    ImpactData_msg.pad4_contact = Pad4_Contact;
+
+
+    ImpactData_Pub->publish(ImpactData_msg);
+}
+
+void SAR_DataConverter::Publish_MiscData()
+{
+
+    //MiscData_msg.header.stamp = ros::Time::now();
+    MiscData_msg.battery_voltage = V_battery;
+    MiscData_msg.plane_angle = Plane_Angle_deg;
+    MiscData_msg.plane_pos.x = Plane_Pos.x;
+    MiscData_msg.plane_pos.y = Plane_Pos.y;
+    MiscData_msg.plane_pos.z = Plane_Pos.z;
+
+
+    
+    MiscData_Pub->publish(MiscData_msg);
+
+}
