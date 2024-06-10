@@ -10,7 +10,7 @@ import getpass
 import asyncio
 
 # ROS2 messages
-from sar_msgs.msg import SARStateData
+from sar_msgs.msg import SARStateData, SARTriggerData
 from sar_msgs.msg import ROSParams
 
 from sar_msgs.srv import CTRLCmdSrv
@@ -114,6 +114,7 @@ class SAR_Base_Interface(Node):
         #       not data at back of a queue waiting to be processed by callbacks
         #self.r_B_O = [0,0,0]
         self.StateData_subscriber = self.create_subscription(SARStateData,'/SAR_DC/StateData',self._SAR_StateDataCallback,1)
+        self.TriggerData_subscriber = self.create_subscription(SARTriggerData,'/SAR_DC/TriggerData',self._SAR_TriggerDataCallback,1)
 
         self.ROSParams_subscriber = self.create_subscription(ROSParams,'/ROS2/PARAMETER',self._ROS_PARAMETERCallback,1)
 
@@ -643,6 +644,68 @@ class SAR_Base_Interface(Node):
         #self.t_prev = self.t # Save t value for next callback iteration
 
         #self.get_logger().info("Callback function executed successfully.")
+
+    def _SAR_TriggerDataCallback(self,TriggerData_msg):
+
+        ## TRIGGER FLAG
+        self.Trg_Flag = TriggerData_msg.trg_flag
+
+        ## POLICY TRIGGERING CONDITIONS
+        #self.t_trg = TriggerData_msg.Time_trg.data.to_sec()
+
+        ## STATES WRT ORIGIN
+        self.r_B_O_trg = np.round([TriggerData_msg.pose_b_o_trg.position.x,
+                                    TriggerData_msg.pose_b_o_trg.position.y,
+                                    TriggerData_msg.pose_b_o_trg.position.z],3)
+        
+        self.V_B_O_trg = np.round([TriggerData_msg.twist_b_o_trg.linear.x,
+                                    TriggerData_msg.twist_b_o_trg.linear.y,
+                                    TriggerData_msg.twist_b_o_trg.linear.z],3)
+        
+        self.Eul_B_O_trg = np.round([TriggerData_msg.eul_b_o_trg.x,
+                                    TriggerData_msg.eul_b_o_trg.y,
+                                    TriggerData_msg.eul_b_o_trg.z],3)
+        
+        self.Omega_B_O_trg = np.round([TriggerData_msg.twist_b_o_trg.angular.x,
+                                        TriggerData_msg.twist_b_o_trg.angular.y,
+                                        TriggerData_msg.twist_b_o_trg.angular.z],3)
+
+        ## STATES WRT PLANE
+        self.r_P_B_trg = np.round([TriggerData_msg.pose_p_b_trg.position.x,
+                                    TriggerData_msg.pose_p_b_trg.position.y,
+                                    TriggerData_msg.pose_p_b_trg.position.z],3)
+        
+        self.Eul_P_B_trg = np.round([TriggerData_msg.eul_p_b_trg.x,
+                                    TriggerData_msg.eul_p_b_trg.y,
+                                    TriggerData_msg.eul_p_b_trg.z],3)
+        
+        self.V_B_P_trg = np.round([TriggerData_msg.twist_b_p_trg.linear.x,  
+                                    TriggerData_msg.twist_b_p_trg.linear.y,
+                                    TriggerData_msg.twist_b_p_trg.linear.z],3)
+        
+        self.Omega_B_P_trg = np.round([TriggerData_msg.twist_b_p_trg.angular.x,
+                                        TriggerData_msg.twist_b_p_trg.angular.y,
+                                        TriggerData_msg.twist_b_p_trg.angular.z],3)
+        
+        self.D_perp_trg = np.round(TriggerData_msg.d_perp_trg,3)
+        self.D_perp_CR_trg = np.round(TriggerData_msg.d_perp_cr_trg,3)
+
+        ## OPTICAL FLOW STATES
+        self.Theta_x_trg = np.round(TriggerData_msg.optical_flow_trg.x,3)
+        self.Theta_y_trg = np.round(TriggerData_msg.optical_flow_trg.y,3)
+        self.Tau_trg = np.round(TriggerData_msg.optical_flow_trg.z,3)
+        self.Tau_CR_trg = np.round(TriggerData_msg.tau_cr_trg,3)
+
+        self.Vel_mag_B_O_trg = np.round(TriggerData_msg.vel_mag_b_o_trg,3)
+        self.Vel_angle_B_O_trg = np.round(TriggerData_msg.vel_angle_b_o_trg,3)
+
+        self.Vel_mag_B_P_trg = np.round(TriggerData_msg.vel_mag_b_p_trg,3)
+        self.Vel_angle_B_P_trg = np.round(TriggerData_msg.vel_angle_b_p_trg,3)
+
+        ## POLICY TRIGGERING CONDITIONS
+        #self.NN_Output_trg = np.round(TriggerData_msg.NN_Output_trg,3)
+        self.a_Trg_trg = np.round(TriggerData_msg.a_trg_trg,3)
+        self.a_Rot_trg = np.round(TriggerData_msg.a_rot_trg,3)
 
     def _SAR_ImpactDataCallback(self,ImpactData_msg):
         print()
