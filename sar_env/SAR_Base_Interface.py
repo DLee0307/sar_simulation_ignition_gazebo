@@ -10,7 +10,10 @@ import getpass
 import asyncio
 
 # ROS2 messages
-from sar_msgs.msg import SARStateData, SARTriggerData, SARImpactData, SARMiscData
+from sar_msgs.msg import SARStateData
+from sar_msgs.msg import SARTriggerData
+from sar_msgs.msg import SARImpactData
+from sar_msgs.msg import SARMiscData
 from sar_msgs.msg import ROSParams
 
 from sar_msgs.srv import CTRLCmdSrv

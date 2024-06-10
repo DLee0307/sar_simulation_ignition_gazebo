@@ -423,8 +423,7 @@ void CTRL_Command(struct CTRL_CmdPacket *CTRL_Cmd)
 
             break;
 
-        case 11: // Constant Velocity Trajectory
-            //std::cout << "Case 11:" << std::endl;
+        case 11: // Upload Constant Velocity Trajectory Values
 
             Traj_Type = CONST_VEL;
             axis = (axis_direction)CTRL_Cmd->cmd_flag;
@@ -433,34 +432,40 @@ void CTRL_Command(struct CTRL_CmdPacket *CTRL_Cmd)
 
                 case x_axis:
 
-                    s_0_t[0] = CTRL_Cmd->cmd_val1;               // Starting position [m]
-                    v_t[0] = CTRL_Cmd->cmd_val2;                 // Desired velocity [m/s]
-                    a_t[0] = CTRL_Cmd->cmd_val3;                 // Acceleration [m/s^2]
+                    s_0_t[0] = Pos_B_O.x;           // Starting position [m]
+                    v_t[0] = CTRL_Cmd->cmd_val1;    // Desired velocity [m/s]
+                    a_t[0] = CTRL_Cmd->cmd_val2;    // Acceleration [m/s^2]
+                    j_t[0] = CTRL_Cmd->cmd_val3;    // Jerk [m/s^3]
+                    t_traj[0] = 0.0f;               // Reset timer
+                    T[0] = 0.0f;                    // Reset completion time
 
-                    t_traj[0] = 0.0f; // Reset timer
                     break;
 
                 case y_axis:
 
-                    s_0_t[1] = CTRL_Cmd->cmd_val1;
-                    v_t[1] = CTRL_Cmd->cmd_val2;
-                    a_t[1] = CTRL_Cmd->cmd_val3;
-
+                    s_0_t[1] = Pos_B_O.y;
+                    v_t[1] = CTRL_Cmd->cmd_val1;    
+                    a_t[1] = CTRL_Cmd->cmd_val2;    
+                    j_t[1] = CTRL_Cmd->cmd_val3;    
                     t_traj[1] = 0.0f;
+                    T[1] = 0.0f;
+
                     break;
 
                 case z_axis:
 
-                    s_0_t[2] = CTRL_Cmd->cmd_val1;
-                    v_t[2] = CTRL_Cmd->cmd_val2;
-                    a_t[2] = CTRL_Cmd->cmd_val3;
-
+                    s_0_t[2] = Pos_B_O.z;
+                    v_t[2] = CTRL_Cmd->cmd_val1;    
+                    a_t[2] = CTRL_Cmd->cmd_val2;    
+                    j_t[2] = CTRL_Cmd->cmd_val3;    
                     t_traj[2] = 0.0f;
+                    T[2] = 0.0f;
+                    
                     break;
                     
             }
 
-            break;    
+            break;   
 
         case 19: // ACTIVATE TRAJECTORY
 
