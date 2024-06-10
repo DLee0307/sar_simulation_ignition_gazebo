@@ -227,6 +227,7 @@ void controllerOutOfTree(control_t *control,const setpoint_t *setpoint,
 
 
         controlOutput(state,sensors);
+        F_thrust = clamp(F_thrust,0.0f,Thrust_max*g2Newton*4*0.85f);
 /*
         if(AngAccel_Flag == true || Trg_Flag == true)
         {
@@ -254,5 +255,21 @@ void controllerOutOfTree(control_t *control,const setpoint_t *setpoint,
         //std::cout << "M4_thrust: " << M4_thrust << std::endl;
         
         //std::cout << "controlOutput is executed" << std::endl;
+        
+        if (!Armed_Flag || MotorStop_Flag || Tumbled_Flag || Impact_Flag_OB || Impact_Flag_Ext)
+        {
+            #ifndef CONFIG_SAR_EXP
+            M1_thrust = 0.0f;
+            M2_thrust = 0.0f;
+            M3_thrust = 0.0f;
+            M4_thrust = 0.0f;
+            #endif
+
+            M1_CMD = 0.0f; 
+            M2_CMD = 0.0f;
+            M3_CMD = 0.0f;
+            M4_CMD = 0.0f;
+        }
     }
+    
 }

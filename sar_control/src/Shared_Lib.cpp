@@ -255,7 +255,7 @@ bool Tumbled_Flag = false;
 bool TumbleDetect_Flag = true;
 bool MotorStop_Flag = false;
 bool AngAccel_Flag = false;
-bool Armed_Flag = false;
+bool Armed_Flag = true; //!!!!! It is false in Bryan's program
 bool CustomThrust_Flag = false;
 bool CustomMotorCMD_Flag = false;
 uint16_t CMD_ID = 0;
@@ -383,8 +383,8 @@ void CTRL_Command(struct CTRL_CmdPacket *CTRL_Cmd)
 
         case 5: // Hard Set All Motorspeeds to Zero
             //std::cout << "Case 5:" << std::endl;
-
-            break;   
+            MotorStop_Flag = !MotorStop_Flag;
+            break;
 
         case 10: // Upload Point-to-Point Trajectory Values
 

@@ -378,7 +378,8 @@ class SAR_Base_Interface(Node):
     ## ========== MOTOR FUNCTIONS ==========
         
     def handle_Stop(self):
-        self.sendCmd("Stop")
+        #!!!!! minor changed with Bryan's program added cmd_vals=[1.0,1.0,1.0]
+        self.sendCmd("Stop", cmd_vals=[1.0,1.0,1.0])
 
     def handle_Thrust_CMD(self):
         vals = self.userInput("Set desired thrust values (f1,f2,f3,f4): ",float)
