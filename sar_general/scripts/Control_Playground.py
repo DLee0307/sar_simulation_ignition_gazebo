@@ -26,8 +26,8 @@ def cmd_send(env):
 
         command_handlers = {
             #0: env.handle_Ctrl_Reset,
-            #1: env.handle_Pos_Cmd,
-            #2: env.handle_Vel_Cmd,
+            1: env.handle_Pos_Cmd,
+            2: env.handle_Vel_Cmd,
             #5: env.handle_Stop,
             #7: env.handle_Ang_Accel,
             #8: env.handle_Policy,
